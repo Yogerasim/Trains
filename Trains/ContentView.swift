@@ -19,13 +19,20 @@ struct ContentView: View {
         }
         .padding()
         .onAppear {
-            // Instantiate the OpenAPI client and service, then call the test method.
             let client = Client(
                 serverURL: (try? Servers.Server1.url()) ?? URL(string: "https://example.com")!,
                 transport: URLSessionTransport()
             )
-            let service = NearestStationsService(client: client, apikey: "358e8b9d-a92c-4b0b-a840-9ca909f976d8")
-            service.testFetchStations()
+
+            // Тестируем NearestStations
+            let nearestService = NearestStationsService(client: client, apikey: "358e8b9d-a92c-4b0b-a840-9ca909f976d8")
+            nearestService.testFetchStations()
+
+            // Тестируем ScheduleOnStation
+            let scheduleService = ScheduleOnStationService(client: client, apikey: "358e8b9d-a92c-4b0b-a840-9ca909f976d8")
+            scheduleService.testFetchSchedule()
+
+            // Остальные сервисы аналогично
         }
     }
 }
