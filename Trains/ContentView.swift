@@ -34,7 +34,7 @@ struct ContentView: View {
 
             // Тестируем ThreadService
             let threadService = ThreadService(client: client, apikey: "358e8b9d-a92c-4b0b-a840-9ca909f976d8")
-            threadService.testFetchThread(station: "s9603421")
+            threadService.testFetchThread(station: "s9602494") // Московский вокзал СПб
         }
     }
 }

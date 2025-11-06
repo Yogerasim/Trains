@@ -40,29 +40,53 @@ final class ThreadService: ThreadServiceProtocol {
                     transport: URLSessionTransport()
                 )
 
-                // 1) Получаем расписание на станции
                 let scheduleService = ScheduleOnStationService(client: client, apikey: apikey)
+
+                print("Fetching schedule for station: \(station)")
+
+                // 1) Получаем расписание по станции
                 let schedule = try await scheduleService.getSchedule(
                     station: station,
                     date: nil,
-                    transportTypes: nil,
+                    transportTypes: "suburban",
                     direction: nil
                 )
 
-                // 2) Берем первый доступный UID рейса
-                if let scheduleDict = schedule as? [String: Any],
-                   let threads = scheduleDict["schedule"] as? [[String: Any]],
-                   let firstThread = threads.first,
-                   let uid = firstThread["uid"] as? String {
-                    
-                    // 3) Получаем детали нитки
-                    let thread = try await getThread(uid: uid)
-                    print("Successfully fetched thread: \(thread)")
-                } else {
-                    print("No threads available for this station")
+                guard let scheduleList = schedule.schedule else {
+                    print("❌ No schedule field in response")
+                    return
                 }
+
+                if scheduleList.isEmpty {
+                    print("❌ Schedule is empty for this station")
+                    return
+                }
+
+                print("✅ Found \(scheduleList.count) schedule entries")
+
+                // 2) Берём UID из каждого thread внутри schedule
+                for (index, item) in scheduleList.enumerated() {
+
+                    guard let thread = item.thread else {
+                        print("⚠️ schedule[\(index)] has no thread object")
+                        continue
+                    }
+
+                    guard let uid = thread.uid else {
+                        print("⚠️ schedule[\(index)] thread has no uid")
+                        continue
+                    }
+
+                    print("➡️ Fetching thread \(index + 1): UID = \(uid)")
+
+                    let threadDetails = try await self.getThread(uid: uid)
+
+                    print("✅ Thread \(uid) details received:")
+                    print(threadDetails)
+                }
+
             } catch {
-                print("Error fetching thread: \(error)")
+                print("❌ Error fetching thread: \(error)")
             }
         }
     }

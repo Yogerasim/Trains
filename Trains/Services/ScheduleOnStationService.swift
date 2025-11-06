@@ -25,25 +25,20 @@ final class ScheduleOnStationService: ScheduleOnStationServiceProtocol {
 
     func getSchedule(
         station: String,
-        date: String? = nil,
-        transportTypes: String? = nil,
-        direction: String? = nil
+        date: String?,
+        transportTypes: String?,
+        direction: String?
     ) async throws -> ScheduleOnStation {
 
-        // Используем правильную операцию из OpenAPI SDK
         let query = Operations.getScheduleOnStation.Input.Query(
             apikey: apikey,
             station: station,
             date: date,
             transport_types: transportTypes,
-            event: nil,
-            system: nil,
-            show_systems: nil,
             direction: direction,
             result_timezone: nil
         )
 
-        // Метод client.getScheduleOnStation(query:) существует в SDK
         let response = try await client.getScheduleOnStation(query: query)
         return try response.ok.body.json
     }
@@ -58,14 +53,14 @@ final class ScheduleOnStationService: ScheduleOnStationServiceProtocol {
                 )
                 let service = ScheduleOnStationService(client: client, apikey: "358e8b9d-a92c-4b0b-a840-9ca909f976d8")
                 print("Fetching schedule...")
-
+                
                 let schedule = try await service.getSchedule(
-                    station: "s9600213",       // код станции
-                    date: nil,                 // текущая дата
-                    transportTypes: "suburban",// электрички
-                    direction: nil             // любое направление
+                    station: "s9600213", // код станции Санкт-Петербурга в формате Яндекс Расписаний
+                    date: nil,
+                    transportTypes: "suburban", // если хочешь электрички
+                    direction: "на Москву"      // пример направления
                 )
-
+                
                 print("Successfully fetched schedule: \(schedule)")
             } catch {
                 print("Error fetching schedule: \(error)")
