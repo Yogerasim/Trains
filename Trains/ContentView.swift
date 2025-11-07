@@ -12,21 +12,22 @@ struct ContentView: View {
         }
         .padding()
         .onAppear {
+            guard APIConfig.runTests else {
+                print("✅ Test requests disabled")
+                return
+            }
+
             let client = APIConfig.client
             let apikey = APIConfig.apiKey
-            guard APIConfig.runTests else {
-                    print("✅ Test requests disabled")
-                    return
-                }
 
             NearestStationsService(client: client, apikey: apikey).testFetchStations()
             ScheduleOnStationService(client: client, apikey: apikey).testFetchSchedule()
             ThreadService(client: client, apikey: apikey).testFetchThread(station: "s9602494")
             RidesBetweenStationsService(client: client, apikey: apikey).testFetchRides()
-            NearestSettlementService().testFetchNearestSettlement()
+            NearestSettlementService(client: client, apikey: apikey).testFetchNearestSettlement()
             CarrierInfoService().testFetchCarrier(code: "TK")
-            StationsListService().testFetchStationsList(limitToOneCountry: true)
-            CopyrightService().testFetchCopyright()
+            StationsListService(client: client, apikey: apikey).testFetchStationsList(limitToOneCountry: true)
+            CopyrightService(client: client, apikey: apikey).testFetchCopyright()
         }
     }
 }

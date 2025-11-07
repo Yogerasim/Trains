@@ -18,7 +18,7 @@ final class CarrierInfoService: CarrierInfoServiceProtocol {
     }
 
     func getCarrierInfo(code: String) async throws -> CarrierResponseType {
-        let query = Operations.getCarrierInfo.Input.Query(apikey: apikey, code: code, format: nil, lang: nil, system: nil)
+        let query = Operations.getCarrierInfo.Input.Query(apikey: apikey, code: code, system: nil, format: nil, lang: nil)
         let response = try await client.getCarrierInfo(query: query)
         return try response.ok.body.json
     }
@@ -35,3 +35,4 @@ final class CarrierInfoService: CarrierInfoServiceProtocol {
         }
     }
 }
+

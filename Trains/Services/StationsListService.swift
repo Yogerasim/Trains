@@ -12,14 +12,20 @@ final class StationsListService: StationsListServiceProtocol {
     private let client: Client
     private let apikey: String
 
-    init(client: Client = ApiConfig.client, apikey: String = ApiConfig.apiKey) {
+    init(client: Client = APIConfig.client, apikey: String = APIConfig.apiKey) {
         self.client = client
         self.apikey = apikey
     }
 
     func getStationsList() async throws -> StationsListResponseType {
-        let query = Operations.getStationsList.Input.Query(apikey: apikey, format: nil, lang: nil)
+        let query = Operations.getStationsList.Input.Query(
+            apikey: apikey,
+            format: nil,
+            lang: nil
+        )
+
         let response = try await client.getStationsList(query: query)
+
         return try response.ok.body.json
     }
 
@@ -28,8 +34,10 @@ final class StationsListService: StationsListServiceProtocol {
             do {
                 print("Fetching stations list...")
                 let resp = try await getStationsList()
+
                 if let countries = resp.countries {
                     print("Countries: \(countries.count)")
+
                     if limitToOneCountry, let first = countries.first {
                         print("First country title: \(first.title ?? "nil")")
                     }

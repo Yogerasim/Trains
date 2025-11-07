@@ -22,9 +22,9 @@ final class NearestSettlementService: NearestSettlementServiceProtocol {
             apikey: apikey,
             lat: lat,
             lng: lng,
-            distance: distance != nil ? Double(distance!) : nil, // ✅ исправлено
-            lang: nil, 
-            format: nil
+            distance: distance != nil ? Double(distance!) : nil,
+            format: nil,
+            lang: nil
         )
 
         let response = try await client.getNearestSettlement(query: query)
