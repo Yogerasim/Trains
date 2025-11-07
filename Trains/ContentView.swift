@@ -23,6 +23,10 @@ struct ContentView: View {
             ScheduleOnStationService(client: client, apikey: apikey).testFetchSchedule()
             ThreadService(client: client, apikey: apikey).testFetchThread(station: "s9602494")
             RidesBetweenStationsService(client: client, apikey: apikey).testFetchRides()
+            NearestSettlementService().testFetchNearestSettlement()
+            CarrierInfoService().testFetchCarrier(code: "TK")
+            StationsListService().testFetchStationsList(limitToOneCountry: true)
+            CopyrightService().testFetchCopyright()
         }
     }
 }
