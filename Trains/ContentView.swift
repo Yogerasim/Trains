@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  Trains
-//
-//  Created by Филипп Герасимов on 05/11/25.
-//
-
 import SwiftUI
 import OpenAPIRuntime
 import OpenAPIURLSession
@@ -24,17 +17,19 @@ struct ContentView: View {
                 transport: URLSessionTransport()
             )
 
-            // Тестируем NearestStations
             let nearestService = NearestStationsService(client: client, apikey: "358e8b9d-a92c-4b0b-a840-9ca909f976d8")
             nearestService.testFetchStations()
 
-            // Тестируем ScheduleOnStation
             let scheduleService = ScheduleOnStationService(client: client, apikey: "358e8b9d-a92c-4b0b-a840-9ca909f976d8")
             scheduleService.testFetchSchedule()
 
-            // Тестируем ThreadService
             let threadService = ThreadService(client: client, apikey: "358e8b9d-a92c-4b0b-a840-9ca909f976d8")
-            threadService.testFetchThread(station: "s9602494") // Московский вокзал СПб
+            threadService.testFetchThread(station: "s9602494") // Московский вокзал СПбм
+            let ridesService = RidesBetweenStationsService(
+                client: client,
+                apikey: "358e8b9d-a92c-4b0b-a840-9ca909f976d8"
+            )
+            ridesService.testFetchRides()
         }
     }
 }

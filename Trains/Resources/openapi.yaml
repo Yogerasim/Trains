@@ -35,7 +35,7 @@ paths:
           schema: { type: integer }
       responses:
         "200":
-          description: success
+          description: Success
           content:
             application/json:
               schema:
@@ -130,21 +130,59 @@ paths:
               schema:
                 $ref: "#/components/schemas/ThreadResponse"
 
+  #############################
+  # 4) rides between stations (search)
+  #############################
+  /v3.0/search/:
+    get:
+      operationId: getRidesBetweenStations
+      summary: Расписание рейсов между станциями
+      tags: [ridesBetweenStations]
+      parameters:
+        - name: apikey
+          in: query
+          required: true
+          schema: { type: string }
+
+        - name: from
+          in: query
+          required: true
+          schema: { type: string }
+
+        - name: to
+          in: query
+          required: true
+          schema: { type: string }
+
+        - name: date
+          in: query
+          schema: { type: string }
+
+        - name: transport_types
+          in: query
+          schema: { type: string }
+
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchRidesResponse"
+
 components:
   schemas:
 
     #############################################
-    # ✅ 1) Nearest Stations
+    # ✅ COMMON SCHEMAS
     #############################################
-    NearestStationsResponse:
+
+    Pagination:
       type: object
       properties:
-        stations:
-          type: array
-          items:
-            $ref: "#/components/schemas/Station"
-        pagination:
-          $ref: "#/components/schemas/Pagination"
+        total: { type: integer }
+        limit: { type: integer }
+        offset: { type: integer }
 
     Station:
       type: object
@@ -157,12 +195,47 @@ components:
         transport_type: { type: string }
       additionalProperties: true
 
-    Pagination:
+    #############################################
+    # ✅ 1) Nearest Stations
+    #############################################
+    NearestStationsResponse:
       type: object
       properties:
-        total: { type: integer }
-        limit: { type: integer }
-        offset: { type: integer }
+        pagination:
+          $ref: "#/components/schemas/Pagination"
+        stations:
+          type: array
+          items:
+            $ref: "#/components/schemas/NearestStation"
+
+    NearestStation:
+      type: object
+      properties:
+        distance: { type: number }
+        code: { type: string }
+        station_type: { type: string }
+        station_type_name: { type: string }
+        type_choices:
+          $ref: "#/components/schemas/TypeChoices"
+        title: { type: string }
+        popular_title: { type: string }
+        short_title: { type: string }
+        transport_type: { type: string }
+        lat: { type: number }
+        lng: { type: number }
+        type: { type: string }
+
+    TypeChoices:
+      type: object
+      properties:
+        schedule:
+          $ref: "#/components/schemas/ScheduleChoice"
+
+    ScheduleChoice:
+      type: object
+      properties:
+        desktop_url: { type: string }
+        touch_url: { type: string }
 
     #############################################
     # ✅ 2) Schedule On Station
@@ -259,3 +332,129 @@ components:
         duration: { type: number }
         station:
           $ref: "#/components/schemas/Station"
+
+    #############################################
+    # ✅ 4) Search rides between stations
+    #############################################
+
+    SearchRidesResponse:
+      type: object
+      properties:
+        pagination:
+          $ref: "#/components/schemas/Pagination"
+        interval_segments:
+          type: array
+          items:
+            $ref: "#/components/schemas/IntervalSegment"
+        segments:
+          type: array
+          items:
+            $ref: "#/components/schemas/RideSegment"
+        search:
+          $ref: "#/components/schemas/SearchInfo"
+
+    SearchInfo:
+      type: object
+      properties:
+        date: { type: string }
+        to:
+          $ref: "#/components/schemas/SimpleStation"
+        from:
+          $ref: "#/components/schemas/SimpleStation"
+
+    SimpleStation:
+      type: object
+      properties:
+        code: { type: string }
+        type: { type: string }
+        title: { type: string }
+        popular_title: { type: string }
+        short_title: { type: string }
+
+    IntervalSegment:
+      type: object
+      properties:
+        from:
+          $ref: "#/components/schemas/SimpleStation"
+        to:
+          $ref: "#/components/schemas/SimpleStation"
+        thread:
+          $ref: "#/components/schemas/RideThread"
+        departure_platform: { type: string }
+        departure_terminal: { type: string }
+        stops: { type: string }
+        has_transfers: { type: boolean }
+        tickets_info:
+          $ref: "#/components/schemas/TicketsInfo"
+        duration: { type: integer }
+        arrival_terminal: { type: string }
+        arrival_platform: { type: string }
+        start_date: { type: string }
+
+    RideSegment:
+      type: object
+      properties:
+        arrival: { type: string }
+        departure: { type: string }
+        from:
+          $ref: "#/components/schemas/SimpleStation"
+        to:
+          $ref: "#/components/schemas/SimpleStation"
+        thread:
+          $ref: "#/components/schemas/RideThread"
+        departure_platform: { type: string }
+        departure_terminal: { type: string }
+        stops: { type: string }
+        has_transfers: { type: boolean }
+        tickets_info:
+          $ref: "#/components/schemas/TicketsInfo"
+        duration: { type: integer }
+        arrival_terminal: { type: string }
+        arrival_platform: { type: string }
+        start_date: { type: string }
+
+    RideThread:
+      type: object
+      properties:
+        uid: { type: string }
+        title: { type: string }
+        number: { type: string }
+        short_title: { type: string }
+        transport_type: { type: string }
+        vehicle: { type: string }
+        express_type: { type: string }
+        carrier:
+          $ref: "#/components/schemas/Carrier"
+        transport_subtype:
+          $ref: "#/components/schemas/TransportSubtype"
+
+    Carrier:
+      type: object
+      additionalProperties: true
+
+    TransportSubtype:
+      type: object
+      additionalProperties: true
+
+    TicketsInfo:
+      type: object
+      properties:
+        et_marker: { type: boolean }
+        places:
+          type: array
+          items:
+            $ref: "#/components/schemas/TicketPlace"
+
+    TicketPlace:
+      type: object
+      properties:
+        currency: { type: string }
+        name: { type: string }
+        price:
+          $ref: "#/components/schemas/Price"
+
+    Price:
+      type: object
+      properties:
+        cents: { type: integer }
+        whole: { type: integer }

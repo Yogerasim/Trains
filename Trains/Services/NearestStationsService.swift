@@ -1,7 +1,6 @@
 import OpenAPIRuntime
 import OpenAPIURLSession
 
-// заменил alias на тот, что соответствует YAML
 typealias NearestStationsResponse = Components.Schemas.NearestStationsResponse
 
 protocol NearestStationsServiceProtocol {
@@ -37,7 +36,6 @@ final class NearestStationsService: NearestStationsServiceProtocol {
                     lng: 30.319163,
                     distance: 50
                 )
-                // Пример того, как взять первый station код — проверь имена полей в сгенерированной модели
                 if let stations = stationsResponse.stations, let first = stations.first {
                     print("First station code: \(first.code ?? "nil") title: \(first.title ?? "nil")")
                 } else {
