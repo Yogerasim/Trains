@@ -5,7 +5,7 @@ struct MainTabView: View {
     
     var body: some View {
         TabView(selection: $selectedTab) {
-            RedScreen()
+            ChoosingDirectionView()
                 .tabItem { Image(selectedTab == 0 ? "Schedule_active" : "Schedule") }
                 .tag(0)
             
@@ -20,7 +20,7 @@ struct MainTabView: View {
 struct RedScreen: View {
     var body: some View {
         ZStack {
-            Color.red.ignoresSafeArea()
+            Color.white.ignoresSafeArea()
             Text("Красная вкладка")
                 .font(.largeTitle)
                 .foregroundColor(.white)
@@ -31,10 +31,10 @@ struct RedScreen: View {
 struct BlueScreen: View {
     var body: some View {
         ZStack {
-            Color.blue.ignoresSafeArea()
-            Text("Синяя вкладка")
+            Color.white.ignoresSafeArea()
+            Text("Settings")
                 .font(.largeTitle)
-                .foregroundColor(.white)
+                .foregroundColor(.black)
         }
     }
 }
