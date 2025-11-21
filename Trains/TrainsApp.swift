@@ -1,17 +1,14 @@
-//
-//  TrainsApp.swift
-//  Trains
-//
-//  Created by Филипп Герасимов on 05/11/25.
-//
-
 import SwiftUI
+import Combine
 
 @main
 struct TrainsApp: App {
+    @StateObject var appModel = AppViewModel()
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainTabView()
+                .environmentObject(appModel)
         }
     }
 }
