@@ -5,18 +5,30 @@ struct ChoosingDirectionView: View {
     @State private var fromTitle: String = "Откуда"
     @State private var toTitle: String = "Куда"
 
+    @State private var showCityFrom = false
+    @State private var showCityTo = false
+
     var body: some View {
         ZStack(alignment: .center) {
 
             RoundedRectangle(cornerRadius: 20)
-                .fill(DesignSystem.Colors.BlueUniversal)
+                .fill(DesignSystem.Colors.blueUniversal)
                 .frame(width: 343)
 
             HStack(alignment: .center) {
 
                 LazyVStack(spacing: 0) {
+
                     DirectionOptionButton(title: fromTitle)
+                        .onTapGesture {
+                            showCityFrom = true
+                        }
+
                     DirectionOptionButton(title: toTitle)
+                        .onTapGesture {
+                            showCityTo = true
+                        }
+
                 }
                 .frame(width: 259)
                 .background(Color.white)
@@ -34,6 +46,16 @@ struct ChoosingDirectionView: View {
             }
         }
         .frame(width: 343, height: 128)
+        .fullScreenCover(isPresented: $showCityFrom) {
+            CitySelectionView { city in
+                fromTitle = city
+            }
+        }
+        .fullScreenCover(isPresented: $showCityTo) {
+            CitySelectionView { city in
+                toTitle = city
+            }
+        }
     }
 
     private func swapDirections() {
@@ -59,7 +81,6 @@ struct DirectionOptionButton: View {
         .frame(height: 48)
     }
 }
-
 #Preview {
     MainTabView()
 }
