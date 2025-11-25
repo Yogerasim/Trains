@@ -1,34 +1,23 @@
 import SwiftUI
 
-struct CitySelectionView: View {
-    
+struct SelectionListView: View {
     @Environment(\.dismiss) private var dismiss
+    
+    let title: String
+    let items: [String]
     var onSelect: (String) -> Void = { _ in }
     
-    @State private var searchText: String = ""
+    @State private var searchText = ""
     
-    private let cities = [
-        "Москва",
-        "Санкт-Петербург",
-        "Сочи",
-        "Горный воздух",
-        "Краснодар",
-        "Казань",
-        "Омск"
-    ]
-    
-    var filteredCities: [String] {
-        if searchText.isEmpty {
-            return cities
-        } else {
-            return cities.filter { $0.lowercased().contains(searchText.lowercased()) }
-        }
+    private var filteredItems: [String] {
+        if searchText.isEmpty { items }
+        else { items.filter { $0.lowercased().contains(searchText.lowercased()) }}
     }
     
     var body: some View {
         VStack(spacing: 0) {
             
-            NavigationTitleView(title: "Выбор города") {
+            NavigationTitleView(title: title) {
                 dismiss()
             }
             
@@ -37,7 +26,6 @@ struct CitySelectionView: View {
                     .foregroundColor(.gray)
                 
                 TextField("Введите запрос", text: $searchText)
-                    .font(DesignSystem.Fonts.regular17)
                 
                 if !searchText.isEmpty {
                     Button {
@@ -48,24 +36,22 @@ struct CitySelectionView: View {
                     }
                 }
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 10)
+            .padding()
             .background(Color(.systemGray6))
             .cornerRadius(12)
             .padding(.horizontal, 16)
             .padding(.top, 12)
             
-            if filteredCities.isEmpty {
+            if filteredItems.isEmpty {
                 Spacer()
                 PlaceholderView(type: .noData)
                 Spacer()
             } else {
                 ScrollView {
                     LazyVStack(spacing: 0) {
-                        ForEach(filteredCities, id: \.self) { city in
-                            CityRowView(city: city) {
-                                onSelect(city)
-                                dismiss()
+                        ForEach(filteredItems, id: \.self) { item in
+                            CityRowView(city: item) {
+                                onSelect(item)
                             }
                         }
                     }
@@ -78,8 +64,4 @@ struct CitySelectionView: View {
         .background(Color.white)
         .ignoresSafeArea(.keyboard)
     }
-}
-
-#Preview {
-    CitySelectionView()
 }

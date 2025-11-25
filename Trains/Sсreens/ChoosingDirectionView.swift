@@ -1,20 +1,21 @@
 import SwiftUI
 
 struct ChoosingDirectionView: View {
-    
+
     @State private var fromTitle: String = "Откуда"
     @State private var toTitle: String = "Куда"
-    
     @State private var showCityFrom = false
     @State private var showCityTo = false
-    
+    @State private var showStationFrom = false
+    @State private var showStationTo = false
+    @State private var selectedCityForStations = ""
     @State private var showStations = false
     
     var bothSelected: Bool {
-        fromTitle != "Откуда" &&
-        fromTitle != "Куда" &&
-        toTitle != "Откуда" &&
-        toTitle != "Куда"
+        !fromTitle.contains("Откуда") &&
+        !fromTitle.contains("Куда") &&
+        !toTitle.contains("Откуда") &&
+        !toTitle.contains("Куда")
     }
     
     var body: some View {
@@ -29,12 +30,12 @@ struct ChoosingDirectionView: View {
                 HStack(alignment: .center) {
                     
                     LazyVStack(spacing: 0) {
-                        
                         Button(action: { showCityFrom = true }) {
                             DirectionOptionButton(title: fromTitle)
                         }
                         .buttonStyle(.plain)
                         
+
                         Button(action: { showCityTo = true }) {
                             DirectionOptionButton(title: toTitle)
                         }
@@ -66,18 +67,21 @@ struct ChoosingDirectionView: View {
                 }
             }
         }
+        
+        
         .fullScreenCover(isPresented: $showCityFrom) {
-            CitySelectionView { city in
-                fromTitle = city
+            CitySelectionView { result in
+                fromTitle = result
+                showCityFrom = false
             }
         }
         .fullScreenCover(isPresented: $showCityTo) {
-            CitySelectionView { city in
-                toTitle = city
+            CitySelectionView { result in
+                toTitle = result
+                showCityTo = false
             }
         }
-        .fullScreenCover(isPresented: $showStations, onDismiss: {
-        }) {
+        .fullScreenCover(isPresented: $showStations) {
             StationsScreenView(
                 headerText: "\(fromTitle) → \(toTitle)",
                 stations: mockStations,
@@ -87,7 +91,6 @@ struct ChoosingDirectionView: View {
             )
         }
     }
-    
     private func swapDirections() {
         withAnimation(.easeInOut(duration: 0.25)) {
             let temp = fromTitle
@@ -96,7 +99,6 @@ struct ChoosingDirectionView: View {
         }
     }
 }
-
 struct DirectionOptionButton: View {
     let title: String
     
@@ -128,6 +130,9 @@ let mockStations = [
         rightBottomText: "22:30"
     )
 ]
+
+
+
 #Preview {
     MainTabView()
 }
