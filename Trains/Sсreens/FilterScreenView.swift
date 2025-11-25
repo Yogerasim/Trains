@@ -6,18 +6,18 @@ struct FilterScreenView: View {
     @Binding var showTransfers: Bool
     var onBack: () -> Void
     var onApply: () -> Void
-
+    
     var body: some View {
         VStack(spacing: 0) {
             VStack(spacing: 24) {
                 VStack(alignment: .leading, spacing: 8) {
-
+                    
                     Text("Время отправления")
                         .font(DesignSystem.Fonts.bigTitle2)
                         .foregroundColor(.black)
                         .frame(width: 343, alignment: .leading)
                         .padding(.leading, 16)
-
+                    
                     VStack(spacing: 16) {
                         ForEach(timeOptions.indices, id: \.self) { index in
                             SelectableRowView(
@@ -28,22 +28,22 @@ struct FilterScreenView: View {
                         }
                     }
                 }
-
+                
                 VStack(alignment: .leading, spacing: 8) {
-
+                    
                     Text("Показывать варианты с пересадками")
                         .font(DesignSystem.Fonts.bigTitle2)
                         .foregroundColor(.black)
                         .frame(width: 343, alignment: .leading)
                         .padding(.leading, 16)
-
+                    
                     VStack(spacing: 16) {
                         SelectableRowView(
                             title: "Да",
                             isSelected: $showTransfers,
                             style: .radio
                         )
-
+                        
                         SelectableRowView(
                             title: "Нет",
                             isSelected: Binding(
@@ -59,7 +59,7 @@ struct FilterScreenView: View {
             }
             .padding(.top, 16)
             .padding(.horizontal, 16)
-
+            
             Spacer()
             PrimaryButton(title: "Применить") {
                 onApply()
@@ -71,10 +71,10 @@ struct FilterScreenView: View {
     }
 }
 struct FilterScreenViewPreview: View {
-
+    
     @State var timeSelections = Array(repeating: false, count: 3)
     @State var showTransfers = false
-
+    
     var body: some View {
         FilterScreenView(
             timeOptions: [

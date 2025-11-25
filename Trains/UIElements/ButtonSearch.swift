@@ -1,10 +1,10 @@
 import SwiftUI
 
 struct ButtonSearch: View {
-
+    
     let title: String
     var action: (() -> Void)? = nil
-
+    
     var body: some View {
         Button(action: {
             action?()

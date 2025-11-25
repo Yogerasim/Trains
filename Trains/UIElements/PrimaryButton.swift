@@ -1,11 +1,11 @@
 import SwiftUI
 
 struct PrimaryButton: View {
-
+    
     let title: String
     var showBadge: Bool = false
     var action: (() -> Void)? = nil
-
+    
     var body: some View {
         Button(action: {
             action?()

@@ -1,27 +1,27 @@
 import SwiftUI
 
 struct PlaceholderView: View {
-
+    
     let type: PlaceholderType
-
+    
     var body: some View {
         VStack {
-                    Spacer()
-                    VStack(spacing: 16) {
-                        if let imageName = type.imageName {
-                            Image(imageName)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 223, height: 223)
-                        }
-
-                        Text(type.title)
-                            .font(DesignSystem.Fonts.bigTitle2)
-                            .foregroundColor(.black)
-                            .multilineTextAlignment(.center)
-                    }
-                    Spacer()
+            Spacer()
+            VStack(spacing: 16) {
+                if let imageName = type.imageName {
+                    Image(imageName)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 223, height: 223)
                 }
+                
+                Text(type.title)
+                    .font(DesignSystem.Fonts.bigTitle2)
+                    .foregroundColor(.black)
+                    .multilineTextAlignment(.center)
+            }
+            Spacer()
+        }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal, 16)
     }
@@ -29,16 +29,16 @@ struct PlaceholderView: View {
 #Preview {
     ScrollView {
         VStack(spacing: 40) {
-
+            
             PlaceholderView(type: .noInternet)
                 .frame(height: 400)
-
+            
             PlaceholderView(type: .serverError)
                 .frame(height: 400)
-
+            
             PlaceholderView(type: .emptyMessage)
                 .frame(height: 300)
-
+            
             PlaceholderView(type: .noData)
                 .frame(height: 300)
         }
@@ -65,7 +65,7 @@ extension PlaceholderType {
             return "Город не найден"
         }
     }
-
+    
     var imageName: String? {
         switch self {
         case .noInternet:
@@ -73,7 +73,7 @@ extension PlaceholderType {
         case .serverError:
             return "ServerError"
         case .emptyMessage,
-             .noData:
+                .noData:
             return nil
         }
     }

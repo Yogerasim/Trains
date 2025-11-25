@@ -1,16 +1,15 @@
 import SwiftUI
 
-// MARK: - Основной экран со станциями
 struct StationsScreenView: View {
-
+    
     let headerText: String
     let stations: [StationData]
     var onBack: (() -> Void)
-
+    
     @State private var path = NavigationPath()
     @State private var hasActiveFilters = false
     @State private var filteredStations: [StationData] = []
-
+    
     var body: some View {
         NavigationStack(path: $path) {
             content
@@ -34,21 +33,21 @@ struct StationsScreenView: View {
             filteredStations = stations
         }
     }
-
+    
     private var content: some View {
         VStack(spacing: 30) {
-
+            
             
             NavigationTitleView(title: "") {
                 onBack()
             }
-
+            
             Text(headerText)
                 .font(DesignSystem.Fonts.bigTitle2)
                 .foregroundColor(.black)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 26)
-
+            
             if filteredStations.isEmpty {
                 PlaceholderView(type: .emptyMessage)
                     .frame(maxWidth: .infinity)
@@ -84,9 +83,9 @@ struct StationsScreenView: View {
                     .padding(.bottom, 100)
                 }
             }
-
+            
             Spacer()
-
+            
             PrimaryButton(title: "Уточнить время", showBadge: hasActiveFilters) {
                 path.append(FilterNav())
             }
@@ -101,12 +100,12 @@ struct FilterScreenViewWrapper: View {
     @Binding var path: NavigationPath
     @Binding var hasActiveFilters: Bool
     @Binding var filteredStations: [StationData]
-
+    
     let allStations: [StationData]
-
+    
     @State private var timeSelections = Array(repeating: false, count: 3)
     @State private var showTransfers = false
-
+    
     var body: some View {
         FilterScreenView(
             timeOptions: [
@@ -121,11 +120,11 @@ struct FilterScreenViewWrapper: View {
             },
             onApply: {
                 hasActiveFilters = timeSelections.contains(true) || showTransfers
-
+                
                 filteredStations = allStations.filter { _ in
                     hasActiveFilters ? Bool.random() : true
                 }
-
+                
                 path.removeLast()
             }
         )
@@ -173,7 +172,7 @@ struct StationData: Identifiable {
             rightBottomText: "08:10"
         )
     ]
-
+    
     StationsScreenView(
         headerText: "Москва (Ярославский вокзал) → Санкт-Петербург (Балтийский вокзал)",
         stations: sampleStations,

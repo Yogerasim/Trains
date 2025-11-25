@@ -1,10 +1,10 @@
 import SwiftUI
 
 struct NavigationTitleView: View {
-
+    
     let title: String
     var onBack: (() -> Void)? = nil
-
+    
     var body: some View {
         Button(action: {
             onBack?()
@@ -16,13 +16,13 @@ struct NavigationTitleView: View {
                     .frame(width: 20, height: 20)
                     .foregroundColor(.black)
                     .padding(.leading, 16)
-
+                
                 Spacer()
-
+                
                 Text(title)
                     .font(DesignSystem.Fonts.title)
                     .multilineTextAlignment(.center)
-
+                
                 Spacer()
                 Rectangle()
                     .fill(Color.clear)

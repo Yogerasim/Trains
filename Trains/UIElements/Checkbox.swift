@@ -6,19 +6,19 @@ enum SelectionStyle {
 }
 
 struct SelectableRowView: View {
-
+    
     let title: String
     @Binding var isSelected: Bool
     let style: SelectionStyle
-
+    
     var body: some View {
         HStack {
             Text(title)
                 .font(DesignSystem.Fonts.regular17)
                 .foregroundColor(.black)
-
+            
             Spacer()
-
+            
             Button(action: {
                 isSelected.toggle()
             }) {
@@ -29,7 +29,7 @@ struct SelectableRowView: View {
                             .frame(width: 24, height: 24)
                             .background(isSelected ? Color.black : Color.clear)
                             .cornerRadius(5)
-
+                        
                         if isSelected {
                             Image(systemName: "checkmark")
                                 .resizable()
@@ -41,7 +41,7 @@ struct SelectableRowView: View {
                         Circle()
                             .stroke(Color.black, lineWidth: 2)
                             .frame(width: 24, height: 24)
-
+                        
                         if isSelected {
                             Circle()
                                 .fill(Color.black)
@@ -60,7 +60,7 @@ struct SelectableRowView: View {
 private struct SelectableRowPreviewContainer: View {
     @State private var checkboxChecked = false
     @State private var radioSelected = true
-
+    
     var body: some View {
         VStack(spacing: 16) {
             SelectableRowView(title: "Утро 06:00 - 12:00", isSelected: $checkboxChecked, style: .checkbox)

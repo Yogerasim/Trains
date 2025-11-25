@@ -1,17 +1,17 @@
 import SwiftUI
 
 struct InfoScreenView: View {
-
+    
     let carrierName: String
     let imageName: String
     let infoItems: [InfoItem]
-
+    
     var body: some View {
         VStack(spacing: 0) {
-
+            
             ScrollView {
                 VStack(spacing: 16) {
-
+                    
                     Image(imageName)
                         .resizable()
                         .scaledToFit()
@@ -24,7 +24,7 @@ struct InfoScreenView: View {
                         .font(DesignSystem.Fonts.bigTitle2)
                         .foregroundColor(.black)
                         .frame(width: 343, alignment: .leading)
-
+                    
                     VStack(spacing: 0) {
                         ForEach(infoItems) { item in
                             InfoElementView(
