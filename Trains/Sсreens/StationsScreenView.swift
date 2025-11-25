@@ -1,29 +1,62 @@
 import SwiftUI
 
+// MARK: - Основной экран со станциями
 struct StationsScreenView: View {
 
     let headerText: String
     let stations: [StationData]
+    var onBack: (() -> Void)
+
+    @State private var path = NavigationPath()
+    @State private var hasActiveFilters = false
+    @State private var filteredStations: [StationData] = []
 
     var body: some View {
-        VStack(spacing: 0) {
+        NavigationStack(path: $path) {
+            content
+                .navigationDestination(for: FilterNav.self) { _ in
+                    FilterScreenViewWrapper(
+                        path: $path,
+                        hasActiveFilters: $hasActiveFilters,
+                        filteredStations: $filteredStations,
+                        allStations: stations
+                    )
+                }
+                .navigationDestination(for: InfoNav.self) { info in
+                    InfoScreenView(
+                        carrierName: info.carrierName,
+                        imageName: info.imageName,
+                        infoItems: info.info
+                    )
+                }
+        }
+        .onAppear {
+            filteredStations = stations
+        }
+    }
 
+    private var content: some View {
+        VStack(spacing: 30) {
+
+            
             NavigationTitleView(title: "") {
-                print("Назад")
+                onBack()
             }
 
-            ScrollView {
-                VStack(spacing: 16) {
+            Text(headerText)
+                .font(DesignSystem.Fonts.bigTitle2)
+                .foregroundColor(.black)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 26)
 
-                    Text(headerText)
-                        .font(DesignSystem.Fonts.bigTitle2)
-                        .foregroundColor(.black)
-                        .frame(width: 343, alignment: .leading)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .padding(.top, 16)
-
+            if filteredStations.isEmpty {
+                PlaceholderView(type: .emptyMessage)
+                    .frame(maxWidth: .infinity)
+                Spacer()
+            } else {
+                ScrollView {
                     VStack(spacing: 16) {
-                        ForEach(stations) { station in
+                        ForEach(filteredStations) { station in
                             StationView(
                                 logoName: station.logoName,
                                 stationName: station.stationName,
@@ -33,23 +66,78 @@ struct StationsScreenView: View {
                                 middleBottomText: station.middleBottomText,
                                 rightBottomText: station.rightBottomText
                             )
+                            .onTapGesture {
+                                path.append(
+                                    InfoNav(
+                                        carrierName: "ОАО «РЖД»",
+                                        imageName: "Image",
+                                        info: [
+                                            InfoItem(title: "Телефон", subtitle: "+7 (904) 329-27-71"),
+                                            InfoItem(title: "Email", subtitle: "i.lozgkina@yandex.ru")
+                                        ]
+                                    )
+                                )
+                            }
                         }
                     }
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 100)
                 }
-                .padding(.horizontal, 16)
-                .padding(.bottom, 100)
             }
 
             Spacer()
 
-            PrimaryButton(title: "Уточнить время") {
-                print("Кнопка нажата")
+            PrimaryButton(title: "Уточнить время", showBadge: hasActiveFilters) {
+                path.append(FilterNav())
             }
             .padding(.bottom, 16)
         }
         .background(Color.white)
-        .ignoresSafeArea(.keyboard)
     }
+}
+
+// MARK: - Wrapper для фильтров
+struct FilterScreenViewWrapper: View {
+    @Binding var path: NavigationPath
+    @Binding var hasActiveFilters: Bool
+    @Binding var filteredStations: [StationData]
+
+    let allStations: [StationData]
+
+    @State private var timeSelections = Array(repeating: false, count: 3)
+    @State private var showTransfers = false
+
+    var body: some View {
+        FilterScreenView(
+            timeOptions: [
+                "Утро 06:00 - 12:00",
+                "День 12:00 - 18:00",
+                "Вечер 18:00 - 00:00"
+            ],
+            timeSelections: $timeSelections,
+            showTransfers: $showTransfers,
+            onBack: {
+                path.removeLast()
+            },
+            onApply: {
+                hasActiveFilters = timeSelections.contains(true) || showTransfers
+
+                filteredStations = allStations.filter { _ in
+                    hasActiveFilters ? Bool.random() : true
+                }
+
+                path.removeLast()
+            }
+        )
+    }
+}
+
+// MARK: - Навигация и модели
+struct FilterNav: Hashable {}
+struct InfoNav: Hashable {
+    let carrierName: String
+    let imageName: String
+    let info: [InfoItem]
 }
 
 struct StationData: Identifiable {
@@ -63,6 +151,7 @@ struct StationData: Identifiable {
     let rightBottomText: String
 }
 
+// MARK: - Preview
 #Preview {
     let sampleStations = [
         StationData(
@@ -82,38 +171,12 @@ struct StationData: Identifiable {
             leftBottomText: "00:10",
             middleBottomText: "8 часов",
             rightBottomText: "08:10"
-        ),
-        StationData(
-            logoName: "YRAL",
-            stationName: "Урал логистика",
-            subtitle: "С пересадкой в Ростове",
-            rightTopText: "16 января",
-            leftBottomText: "06:30",
-            middleBottomText: "10 часов",
-            rightBottomText: "16:30"
-        ),
-        StationData(
-            logoName: "RZHD",
-            stationName: "РЖД",
-            subtitle: nil,
-            rightTopText: "16 января",
-            leftBottomText: "12:00",
-            middleBottomText: "7 часов",
-            rightBottomText: "19:00"
-        ),
-        StationData(
-            logoName: "RZHD",
-            stationName: "РЖД",
-            subtitle: "С пересадкой в Тюмени",
-            rightTopText: "16 января",
-            leftBottomText: "14:00",
-            middleBottomText: "6 часов",
-            rightBottomText: "20:00"
         )
     ]
 
     StationsScreenView(
         headerText: "Москва (Ярославский вокзал) → Санкт-Петербург (Балтийский вокзал)",
-        stations: sampleStations
+        stations: sampleStations,
+        onBack: {}
     )
 }

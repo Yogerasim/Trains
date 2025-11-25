@@ -2,16 +2,12 @@ import SwiftUI
 
 struct InfoScreenView: View {
 
-    let carrierName: String          // Название перевозчика (из API)
-    let imageName: String            // Изображение перевозчика (из API)
-    let infoItems: [InfoItem]        // Массив элементов info
+    let carrierName: String
+    let imageName: String
+    let infoItems: [InfoItem]
 
     var body: some View {
         VStack(spacing: 0) {
-
-            NavigationTitleView(title: "Информация о перевозчике") {
-                print("Назад")
-            }
 
             ScrollView {
                 VStack(spacing: 16) {
@@ -19,8 +15,9 @@ struct InfoScreenView: View {
                     Image(imageName)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 343) // высота сама подстраивается
+                        .frame(width: 343)
                         .cornerRadius(16)
+                        .frame(maxWidth: .infinity)
                         .padding(.top, 16)
                     
                     Text(carrierName)
@@ -46,7 +43,7 @@ struct InfoScreenView: View {
     }
 }
 
-struct InfoItem: Identifiable {
+struct InfoItem: Identifiable, Hashable {
     let id = UUID()
     let title: String
     let subtitle: String

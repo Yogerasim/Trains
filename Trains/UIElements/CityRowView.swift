@@ -6,27 +6,28 @@ struct CityRowView: View {
     var onSelect: (() -> Void)? = nil
 
     var body: some View {
-        HStack {
+        Button(action: {
+            onSelect?()
+        }) {
+            HStack {
+                Text(city)
+                    .font(DesignSystem.Fonts.regular17)
+                    .foregroundColor(.black)
+                    .padding(.leading, 16)
 
-            Text(city)
-                .font(DesignSystem.Fonts.regular17)
-                .foregroundColor(.black)
-                .padding(.leading, 16)
+                Spacer()
 
-            Spacer()
-
-            Button(action: {
-                onSelect?()
-            }) {
                 Image(systemName: "chevron.right")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 20, height: 20)
                     .foregroundColor(.black)
+                    .padding(.trailing, 16)
             }
-            .padding(.trailing, 16)
+            .frame(width: 375, height: 60)
+            .contentShape(Rectangle())
         }
-        .frame(width: 375, height: 60, alignment: .center)
+        .buttonStyle(.plain)
     }
 }
 

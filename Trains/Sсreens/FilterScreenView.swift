@@ -4,17 +4,14 @@ struct FilterScreenView: View {
     let timeOptions: [String]
     @Binding var timeSelections: [Bool]
     @Binding var showTransfers: Bool
+    var onBack: () -> Void
+    var onApply: () -> Void
 
     var body: some View {
         VStack(spacing: 0) {
-
-            NavigationTitleView(title: "") {
-                print("Назад")
-            }
-
             VStack(spacing: 24) {
-
                 VStack(alignment: .leading, spacing: 8) {
+
                     Text("Время отправления")
                         .font(DesignSystem.Fonts.bigTitle2)
                         .foregroundColor(.black)
@@ -33,6 +30,7 @@ struct FilterScreenView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 8) {
+
                     Text("Показывать варианты с пересадками")
                         .font(DesignSystem.Fonts.bigTitle2)
                         .foregroundColor(.black)
@@ -45,11 +43,14 @@ struct FilterScreenView: View {
                             isSelected: $showTransfers,
                             style: .radio
                         )
+
                         SelectableRowView(
                             title: "Нет",
                             isSelected: Binding(
                                 get: { !showTransfers },
-                                set: { newValue in showTransfers = !newValue }
+                                set: { newValue in
+                                    showTransfers = !newValue
+                                }
                             ),
                             style: .radio
                         )
@@ -60,9 +61,8 @@ struct FilterScreenView: View {
             .padding(.horizontal, 16)
 
             Spacer()
-
             PrimaryButton(title: "Применить") {
-                print("Применить фильтры")
+                onApply()
             }
             .padding(.bottom, 16)
         }
@@ -70,8 +70,8 @@ struct FilterScreenView: View {
         .ignoresSafeArea(.keyboard)
     }
 }
-
 struct FilterScreenViewPreview: View {
+
     @State var timeSelections = Array(repeating: false, count: 3)
     @State var showTransfers = false
 
@@ -83,7 +83,9 @@ struct FilterScreenViewPreview: View {
                 "Вечер 18:00 - 00:00"
             ],
             timeSelections: $timeSelections,
-            showTransfers: $showTransfers
+            showTransfers: $showTransfers,
+            onBack: {},
+            onApply: {}
         )
     }
 }

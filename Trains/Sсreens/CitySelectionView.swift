@@ -32,6 +32,7 @@ struct CitySelectionView: View {
                 dismiss()
             }
 
+            // MARK: — поиск
             HStack(spacing: 8) {
                 Image(systemName: "magnifyingglass")
                     .foregroundColor(.gray)
@@ -55,16 +56,23 @@ struct CitySelectionView: View {
             .padding(.horizontal, 16)
             .padding(.top, 12)
 
-            ScrollView {
-                LazyVStack(spacing: 0) {
-                    ForEach(filteredCities, id: \.self) { city in
-                        CityRowView(city: city) {
-                            onSelect(city)
-                            dismiss()
+            // MARK: — контент экрана
+            if filteredCities.isEmpty {
+                Spacer()
+                PlaceholderView(type: .noData)
+                Spacer()
+            } else {
+                ScrollView {
+                    LazyVStack(spacing: 0) {
+                        ForEach(filteredCities, id: \.self) { city in
+                            CityRowView(city: city) {
+                                onSelect(city)
+                                dismiss()
+                            }
                         }
                     }
+                    .padding(.top, 8)
                 }
-                .padding(.top, 8)
             }
 
             Spacer()
