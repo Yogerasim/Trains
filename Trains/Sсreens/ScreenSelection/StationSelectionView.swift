@@ -7,15 +7,24 @@ struct StationSelectionView: View {
     ]
     
     var onSelect: (String) -> Void = { _ in }
-
+    
+    @State private var showNoInternet = false
+    @State private var showServerError = false
+    
     var body: some View {
         NavigationStack {
-            SelectionListView(
-                title: "Выбор вокзала",
-                items: stations,
-                onSelect: onSelect
-            )
-            .navigationBarBackButtonHidden(true)
+            if showNoInternet {
+                PlaceholderView(type: .noInternet)
+            } else if showServerError {
+                PlaceholderView(type: .serverError)
+            } else {
+                SelectionListView(
+                    title: "Выбор вокзала",
+                    items: stations,
+                    onSelect: onSelect
+                )
+                .navigationBarBackButtonHidden(true)
+            }
         }
     }
 }

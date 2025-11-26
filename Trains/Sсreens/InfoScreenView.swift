@@ -5,10 +5,30 @@ struct InfoScreenView: View {
     let carrierName: String
     let imageName: String
     let infoItems: [InfoItem]
+    @State private var showNoInternet = false
+    @State private var showServerError = false
     
     var body: some View {
         VStack(spacing: 0) {
             
+            contentView
+            
+        }
+        .background(DesignSystem.Colors.background)
+        .ignoresSafeArea(.keyboard)
+    }
+    @ViewBuilder
+    private var contentView: some View {
+        
+        if showNoInternet {
+            PlaceholderView(type: .noInternet)
+                .frame(maxHeight: .infinity)
+            
+        } else if showServerError {
+            PlaceholderView(type: .serverError)
+                .frame(maxHeight: .infinity)
+            
+        } else {
             ScrollView {
                 VStack(spacing: 16) {
                     
@@ -22,7 +42,7 @@ struct InfoScreenView: View {
                     
                     Text(carrierName)
                         .font(DesignSystem.Fonts.bigTitle2)
-                        .foregroundColor(.black)
+                        .foregroundColor(DesignSystem.Colors.textPrimary)
                         .frame(width: 343, alignment: .leading)
                     
                     VStack(spacing: 0) {
@@ -38,10 +58,9 @@ struct InfoScreenView: View {
                 .padding(.bottom, 32)
             }
         }
-        .background(Color.white)
-        .ignoresSafeArea(.keyboard)
     }
 }
+
 
 struct InfoItem: Identifiable, Hashable {
     let id = UUID()

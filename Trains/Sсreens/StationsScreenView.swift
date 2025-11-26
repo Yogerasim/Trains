@@ -10,33 +10,52 @@ struct StationsScreenView: View {
     @State private var hasActiveFilters = false
     @State private var filteredStations: [StationData] = []
     
+    @State private var showNoInternet = false
+    @State private var showServerError = false
+    
     var body: some View {
-        NavigationStack(path: $path) {
-            content
-                .navigationDestination(for: FilterNav.self) { _ in
-                    FilterScreenViewWrapper(
-                        path: $path,
-                        hasActiveFilters: $hasActiveFilters,
-                        filteredStations: $filteredStations,
-                        allStations: stations
-                    )
+        ZStack {
+            
+            NavigationStack(path: $path) {
+                content
+                    .navigationDestination(for: FilterNav.self) { _ in
+                        FilterScreenViewWrapper(
+                            path: $path,
+                            hasActiveFilters: $hasActiveFilters,
+                            filteredStations: $filteredStations,
+                            allStations: stations
+                        )
+                    }
+                    .navigationDestination(for: InfoNav.self) { info in
+                        InfoScreenView(
+                            carrierName: info.carrierName,
+                            imageName: info.imageName,
+                            infoItems: info.info
+                        )
+                    }
+                    .navigationBarBackButtonHidden(true)
+            }
+            .onAppear { filteredStations = stations }
+            
+            if showNoInternet {
+                ZStack {
+                    Color.white.ignoresSafeArea()
+                    PlaceholderView(type: .noInternet)
                 }
-                .navigationDestination(for: InfoNav.self) { info in
-                    InfoScreenView(
-                        carrierName: info.carrierName,
-                        imageName: info.imageName,
-                        infoItems: info.info
-                    )
+                .zIndex(10)
+            }
+            else if showServerError {
+                ZStack {
+                    Color.white.ignoresSafeArea()
+                    PlaceholderView(type: .serverError)
                 }
-        }
-        .onAppear {
-            filteredStations = stations
+                .zIndex(10)
+            }
         }
     }
     
     private var content: some View {
         VStack(spacing: 30) {
-            
             
             NavigationTitleView(title: "") {
                 onBack()
@@ -44,7 +63,7 @@ struct StationsScreenView: View {
             
             Text(headerText)
                 .font(DesignSystem.Fonts.bigTitle2)
-                .foregroundColor(.black)
+                .foregroundColor(DesignSystem.Colors.textPrimary)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 26)
             
@@ -91,7 +110,7 @@ struct StationsScreenView: View {
             }
             .padding(.bottom, 16)
         }
-        .background(Color.white)
+        .background(DesignSystem.Colors.background)
     }
 }
 

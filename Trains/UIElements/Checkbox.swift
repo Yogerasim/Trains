@@ -11,11 +11,13 @@ struct SelectableRowView: View {
     @Binding var isSelected: Bool
     let style: SelectionStyle
     
+    @Environment(\.colorScheme) private var colorScheme
+    
     var body: some View {
         HStack {
             Text(title)
                 .font(DesignSystem.Fonts.regular17)
-                .foregroundColor(.black)
+                .foregroundColor(DesignSystem.Colors.textPrimary)
             
             Spacer()
             
@@ -24,10 +26,23 @@ struct SelectableRowView: View {
             }) {
                 ZStack {
                     if style == .checkbox {
+                        
+                        let borderColor = DesignSystem.Colors.textPrimary
+                        
+                        let fillColor = colorScheme == .dark
+                            ? Color.white
+                            : Color.black
+                        
+                        let checkColor = colorScheme == .dark
+                            ? Color.black
+                            : Color.white
+                        
                         Rectangle()
-                            .stroke(Color.black, lineWidth: 5)
+                            .stroke(borderColor, lineWidth: 5)
                             .frame(width: 24, height: 24)
-                            .background(isSelected ? Color.black : Color.clear)
+                            .background(
+                                isSelected ? fillColor : Color.clear
+                            )
                             .cornerRadius(5)
                         
                         if isSelected {
@@ -35,22 +50,30 @@ struct SelectableRowView: View {
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 14, height: 14)
-                                .foregroundColor(.white)
+                                .foregroundColor(checkColor)
                         }
+                        
                     } else {
+                        
+                        let borderColor = DesignSystem.Colors.textPrimary
+                        
+                        let fillColor = colorScheme == .dark
+                            ? Color.white
+                            : Color.black
+                        
                         Circle()
-                            .stroke(Color.black, lineWidth: 2)
+                            .stroke(borderColor, lineWidth: 2)
                             .frame(width: 24, height: 24)
                         
                         if isSelected {
                             Circle()
-                                .fill(Color.black)
+                                .fill(fillColor)
                                 .frame(width: 12, height: 12)
                         }
                     }
                 }
             }
-            .buttonStyle(PlainButtonStyle())
+            .buttonStyle(.plain)
         }
         .frame(width: 343, height: 60)
         .padding(.horizontal, 16)

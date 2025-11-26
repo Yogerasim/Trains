@@ -61,7 +61,7 @@ struct SelectionListView: View {
             
             Spacer()
         }
-        .background(Color.white)
+        .background(DesignSystem.Colors.background)
         .ignoresSafeArea(.keyboard)
     }
 }

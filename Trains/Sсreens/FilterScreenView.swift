@@ -7,14 +7,45 @@ struct FilterScreenView: View {
     var onBack: () -> Void
     var onApply: () -> Void
     
+    @State private var showNoInternet = false
+    @State private var showServerError = false
+    
     var body: some View {
         VStack(spacing: 0) {
+            
+            contentView
+            
+            Spacer()
+            
+            if !showNoInternet && !showServerError {
+                PrimaryButton(title: "Применить") {
+                    onApply()
+                }
+                .padding(.bottom, 16)
+            }
+        }
+        .background(DesignSystem.Colors.background)
+        .ignoresSafeArea(.keyboard)
+    }
+    
+    @ViewBuilder
+    private var contentView: some View {
+        
+        if showNoInternet {
+            PlaceholderView(type: .noInternet)
+                .frame(maxHeight: .infinity)
+            
+        } else if showServerError {
+            PlaceholderView(type: .serverError)
+                .frame(maxHeight: .infinity)
+            
+        } else {
             VStack(spacing: 24) {
+                
                 VStack(alignment: .leading, spacing: 8) {
-                    
                     Text("Время отправления")
                         .font(DesignSystem.Fonts.bigTitle2)
-                        .foregroundColor(.black)
+                        .foregroundColor(DesignSystem.Colors.textPrimary)
                         .frame(width: 343, alignment: .leading)
                         .padding(.leading, 16)
                     
@@ -30,10 +61,9 @@ struct FilterScreenView: View {
                 }
                 
                 VStack(alignment: .leading, spacing: 8) {
-                    
                     Text("Показывать варианты с пересадками")
                         .font(DesignSystem.Fonts.bigTitle2)
-                        .foregroundColor(.black)
+                        .foregroundColor(DesignSystem.Colors.textPrimary)
                         .frame(width: 343, alignment: .leading)
                         .padding(.leading, 16)
                     
@@ -59,17 +89,11 @@ struct FilterScreenView: View {
             }
             .padding(.top, 16)
             .padding(.horizontal, 16)
-            
-            Spacer()
-            PrimaryButton(title: "Применить") {
-                onApply()
-            }
-            .padding(.bottom, 16)
         }
-        .background(Color.white)
-        .ignoresSafeArea(.keyboard)
     }
 }
+
+
 struct FilterScreenViewPreview: View {
     
     @State var timeSelections = Array(repeating: false, count: 3)

@@ -6,6 +6,9 @@ struct DesignSystem {
         static let blueUniversal = Color(hex: "#3772E7")
         static let redUniversal = Color(hex: "#F56B6C")
         static let lightGray = Color(hex: "#EEEEEE")
+        
+        static let background = Color("AppBackground")
+        static let textPrimary = Color("TextPrimary")
     }
     
     struct Fonts {

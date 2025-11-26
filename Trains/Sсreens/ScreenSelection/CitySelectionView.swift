@@ -12,26 +12,40 @@ struct CitySelectionView: View {
         "Казань",
         "Омск"
     ]
+    
     private struct CityItem: Identifiable, Hashable {
         let id = UUID()
         let name: String
     }
     
+    @State private var showNoInternet = false
+    @State private var showServerError = false
     @State private var selectedCity: CityItem? = nil
     
     var body: some View {
         NavigationStack {
+            
+            contentView
+            
+                .navigationDestination(item: $selectedCity) { cityItem in
+                    StationSelectionView { station in
+                        onSelect("\(cityItem.name) (\(station))")
+                    }
+                }
+        }
+    }
+    @ViewBuilder
+    private var contentView: some View {
+        if showNoInternet {
+            PlaceholderView(type: .noInternet)
+        } else if showServerError {
+            PlaceholderView(type: .serverError)
+        } else {
             SelectionListView(
                 title: "Выбор города",
-                items: cities,
-                onSelect: { city in
-                    selectedCity = CityItem(name: city)
-                }
-            )
-            .navigationDestination(item: $selectedCity) { cityItem in
-                StationSelectionView { station in
-                    onSelect("\(cityItem.name) (\(station))")
-                }
+                items: cities
+            ) { city in
+                selectedCity = CityItem(name: city)
             }
         }
     }

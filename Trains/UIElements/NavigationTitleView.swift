@@ -14,22 +14,23 @@ struct NavigationTitleView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 20, height: 20)
-                    .foregroundColor(.black)
+                    .foregroundColor(DesignSystem.Colors.textPrimary)
                     .padding(.leading, 16)
                 
                 Spacer()
                 
                 Text(title)
                     .font(DesignSystem.Fonts.title)
-                    .multilineTextAlignment(.center)
+                    .foregroundColor(DesignSystem.Colors.textPrimary)
                 
                 Spacer()
+                
                 Rectangle()
                     .fill(Color.clear)
                     .frame(width: 20, height: 20)
                     .padding(.trailing, 16)
             }
-            .frame(width: 375, height: 42)
+            .frame(height: 42)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
