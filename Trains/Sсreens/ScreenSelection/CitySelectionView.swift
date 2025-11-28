@@ -3,15 +3,7 @@ import SwiftUI
 struct CitySelectionView: View {
     var onSelect: (String) -> Void = { _ in }
     
-    private let cities = [
-        "Москва",
-        "Санкт-Петербург",
-        "Сочи",
-        "Горный воздух",
-        "Краснодар",
-        "Казань",
-        "Омск"
-    ]
+    private let cities = MockData.cities
     
     private struct CityItem: Identifiable, Hashable {
         let id = UUID()
@@ -20,7 +12,7 @@ struct CitySelectionView: View {
     
     @State private var showNoInternet = false
     @State private var showServerError = false
-    @State private var selectedCity: CityItem? = nil
+    @State private var selectedCity: CityItem?
     
     var body: some View {
         NavigationStack {

@@ -1,10 +1,7 @@
 import SwiftUI
 
 struct StationSelectionView: View {
-    var stations: [String] = [
-        "Казанский вокзал", "Ладожский вокзал", "Ярославский вокзал",
-        "Витебский вокзал", "Левобережная"
-    ]
+    var stations: [String] = MockData.stations
     
     var onSelect: (String) -> Void = { _ in }
     

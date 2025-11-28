@@ -4,8 +4,8 @@ struct FilterScreenView: View {
     let timeOptions: [String]
     @Binding var timeSelections: [Bool]
     @Binding var showTransfers: Bool
-    var onBack: () -> Void
-    var onApply: () -> Void
+    let onBack: () -> Void
+    let onApply: () -> Void
     
     @State private var showNoInternet = false
     @State private var showServerError = false
@@ -87,17 +87,16 @@ struct FilterScreenView: View {
                     }
                 }
             }
-            .padding(.top, 16)
-            .padding(.horizontal, 16)
+            .padding([.top, .horizontal], 16)
         }
     }
 }
 
 
-struct FilterScreenViewPreview: View {
+private struct FilterScreenViewPreview: View {
     
-    @State var timeSelections = Array(repeating: false, count: 3)
-    @State var showTransfers = false
+    @State private var timeSelections = Array(repeating: false, count: 3)
+    @State private var showTransfers = false
     
     var body: some View {
         FilterScreenView(

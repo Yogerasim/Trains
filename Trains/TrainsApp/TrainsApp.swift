@@ -1,8 +1,7 @@
 import SwiftUI
-import Combine
 
 @main
-struct TrainsApp: App {
+private struct TrainsApp: App {
     @StateObject var appModel = AppViewModel()
 
     var body: some Scene {

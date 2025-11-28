@@ -15,7 +15,6 @@ struct StationsScreenView: View {
     
     var body: some View {
         ZStack {
-            
             NavigationStack(path: $path) {
                 content
                     .navigationDestination(for: FilterNav.self) { _ in
@@ -30,7 +29,7 @@ struct StationsScreenView: View {
                         InfoScreenView(
                             carrierName: info.carrierName,
                             imageName: info.imageName,
-                            infoItems: info.info
+                            infoItems: MockData.infoItems
                         )
                     }
                     .navigationBarBackButtonHidden(true)
@@ -43,8 +42,7 @@ struct StationsScreenView: View {
                     PlaceholderView(type: .noInternet)
                 }
                 .zIndex(10)
-            }
-            else if showServerError {
+            } else if showServerError {
                 ZStack {
                     Color.white.ignoresSafeArea()
                     PlaceholderView(type: .serverError)
@@ -89,10 +87,7 @@ struct StationsScreenView: View {
                                     InfoNav(
                                         carrierName: "ОАО «РЖД»",
                                         imageName: "Image",
-                                        info: [
-                                            InfoItem(title: "Телефон", subtitle: "+7 (904) 329-27-71"),
-                                            InfoItem(title: "Email", subtitle: "i.lozgkina@yandex.ru")
-                                        ]
+                                        info: MockData.infoItems
                                     )
                                 )
                             }
@@ -149,26 +144,6 @@ struct FilterScreenViewWrapper: View {
         )
     }
 }
-
-// MARK: - Навигация и модели
-struct FilterNav: Hashable {}
-struct InfoNav: Hashable {
-    let carrierName: String
-    let imageName: String
-    let info: [InfoItem]
-}
-
-struct StationData: Identifiable {
-    let id = UUID()
-    let logoName: String
-    let stationName: String
-    let subtitle: String?
-    let rightTopText: String
-    let leftBottomText: String
-    let middleBottomText: String
-    let rightBottomText: String
-}
-
 // MARK: - Preview
 #Preview {
     let sampleStations = [

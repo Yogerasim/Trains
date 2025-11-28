@@ -55,26 +55,18 @@ enum PlaceholderType {
 extension PlaceholderType {
     var title: String {
         switch self {
-        case .noInternet:
-            return "Нет интернета"
-        case .serverError:
-            return "Ошибка сервера"
-        case .emptyMessage:
-            return "Вариантов нет"
-        case .noData:
-            return "Город не найден"
+        case .noInternet: "Нет интернета"
+        case .serverError: "Ошибка сервера"
+        case .emptyMessage: "Вариантов нет"
+        case .noData: "Город не найден"
         }
     }
     
     var imageName: String? {
         switch self {
-        case .noInternet:
-            return "NoInternet"
-        case .serverError:
-            return "ServerError"
-        case .emptyMessage,
-                .noData:
-            return nil
+        case .noInternet: "NoInternet"
+        case .serverError: "ServerError"
+        case .emptyMessage, .noData: nil
         }
     }
 }
