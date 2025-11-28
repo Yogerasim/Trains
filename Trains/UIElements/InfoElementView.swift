@@ -9,11 +9,11 @@ struct InfoElementView: View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title)
                 .font(DesignSystem.Fonts.regular17)
-                .foregroundColor(DesignSystem.Colors.textPrimary)
+                .foregroundStyle(DesignSystem.Colors.textPrimary)
             
             Text(subtitle)
                 .font(DesignSystem.Fonts.regular12)
-                .foregroundColor(DesignSystem.Colors.blueUniversal)
+                .foregroundStyle(DesignSystem.Colors.blueUniversal)
         }
         .frame(width: 375, height: 60, alignment: .leading)
         .padding(.horizontal, 16)

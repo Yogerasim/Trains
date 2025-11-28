@@ -67,13 +67,13 @@ struct ChoosingDirectionView: View {
         } else {
             VStack(spacing: 16) {
                 
-                ZStack(alignment: .center) {
+                ZStack() {
                     
                     RoundedRectangle(cornerRadius: 20)
                         .fill(DesignSystem.Colors.blueUniversal)
                         .frame(width: 343)
                     
-                    HStack(alignment: .center) {
+                    HStack() {
                         
                         LazyVStack(spacing: 0) {
                             Button(action: { showCityFrom = true }) {
@@ -88,7 +88,7 @@ struct ChoosingDirectionView: View {
                         }
                         .frame(width: 259)
                         .background(Color.white)
-                        .cornerRadius(20)
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
                         .padding(.leading, 16)
                         
                         Spacer()
@@ -103,13 +103,11 @@ struct ChoosingDirectionView: View {
                 }
                 .frame(width: 343, height: 128)
                 
-                if bothSelected {
-                    withAnimation(.easeInOut) {
-                        ButtonSearch(title: "Найти") {
-                            showStations = true
-                        }
-                    }
+                ButtonSearch(title: "Найти") {
+                    showStations = true
                 }
+                .opacity(bothSelected ? 1 : 0)
+                .animation(.easeInOut, value: bothSelected)
             }
         }
     }
@@ -122,7 +120,7 @@ struct ChoosingDirectionView: View {
         }
     }
 }
-struct DirectionOptionButton: View {
+private struct DirectionOptionButton: View {
     let title: String
     
     private var isPlaceholder: Bool {
@@ -133,7 +131,7 @@ struct DirectionOptionButton: View {
         HStack {
             Text(title)
                 .font(.system(size: 17, weight: .medium))
-                .foregroundColor(isPlaceholder ? .gray : .black)
+                .foregroundStyle(isPlaceholder ? .gray : .black)
             Spacer()
         }
         .padding(.horizontal, 16)

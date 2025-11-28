@@ -45,7 +45,7 @@ struct FilterScreenView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Время отправления")
                         .font(DesignSystem.Fonts.bigTitle2)
-                        .foregroundColor(DesignSystem.Colors.textPrimary)
+                        .foregroundStyle(DesignSystem.Colors.textPrimary)
                         .frame(width: 343, alignment: .leading)
                         .padding(.leading, 16)
                     
@@ -63,7 +63,7 @@ struct FilterScreenView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Показывать варианты с пересадками")
                         .font(DesignSystem.Fonts.bigTitle2)
-                        .foregroundColor(DesignSystem.Colors.textPrimary)
+                        .foregroundStyle(DesignSystem.Colors.textPrimary)
                         .frame(width: 343, alignment: .leading)
                         .padding(.leading, 16)
                     

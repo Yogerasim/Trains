@@ -14,14 +14,14 @@ struct NavigationTitleView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 20, height: 20)
-                    .foregroundColor(DesignSystem.Colors.textPrimary)
+                    .foregroundStyle(DesignSystem.Colors.textPrimary)
                     .padding(.leading, 16)
                 
                 Spacer()
                 
                 Text(title)
                     .font(DesignSystem.Fonts.title)
-                    .foregroundColor(DesignSystem.Colors.textPrimary)
+                    .foregroundStyle(DesignSystem.Colors.textPrimary)
                 
                 Spacer()
                 

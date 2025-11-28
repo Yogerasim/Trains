@@ -11,12 +11,12 @@ struct ButtonSearch: View {
         }) {
             Text(title)
                 .font(DesignSystem.Fonts.title)
-                .foregroundColor(.white)
+                .foregroundStyle(.white)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .frame(width: 150, height: 60)
         .background(DesignSystem.Colors.blueUniversal)
-        .cornerRadius(16)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
     }
 }
 

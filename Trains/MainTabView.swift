@@ -6,25 +6,18 @@ struct MainTabView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             ChoosingDirectionView()
-                .tabItem { Image(selectedTab == 0 ? "Schedule_active" : "Schedule") }
+                .tabItem {
+                    Image(selectedTab == 0 ? .scheduleActive : .schedule)
+                }
                 .tag(0)
             
             BlueScreen()
-                .tabItem { Image(selectedTab == 1 ? "Settings_active" : "Settings") }
+                .tabItem {
+                    Image(selectedTab == 1 ? .settingsActive : .settings)
+                }
                 .tag(1)
         }
         .labelStyle(.iconOnly)
-    }
-}
-
-struct RedScreen: View {
-    var body: some View {
-        ZStack {
-            Color.white.ignoresSafeArea()
-            Text("Красная вкладка")
-                .font(.largeTitle)
-                .foregroundColor(.white)
-        }
     }
 }
 
@@ -34,7 +27,7 @@ struct BlueScreen: View {
             Color.white.ignoresSafeArea()
             Text("Settings")
                 .font(.largeTitle)
-                .foregroundColor(.black)
+                .foregroundStyle(.black)
         }
     }
 }

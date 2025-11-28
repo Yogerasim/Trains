@@ -12,7 +12,7 @@ struct CityRowView: View {
             HStack {
                 Text(city)
                     .font(DesignSystem.Fonts.regular17)
-                    .foregroundColor(DesignSystem.Colors.textPrimary)
+                    .foregroundStyle(DesignSystem.Colors.textPrimary)
                     .padding(.leading, 16)
                 
                 Spacer()
@@ -21,7 +21,7 @@ struct CityRowView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 20, height: 20)
-                    .foregroundColor(DesignSystem.Colors.textPrimary)
+                    .foregroundStyle(DesignSystem.Colors.textPrimary)
                     .padding(.trailing, 16)
             }
             .frame(width: 375, height: 60)

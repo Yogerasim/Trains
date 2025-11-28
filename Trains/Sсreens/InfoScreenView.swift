@@ -36,13 +36,13 @@ struct InfoScreenView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 343)
-                        .cornerRadius(16)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
                         .frame(maxWidth: .infinity)
                         .padding(.top, 16)
                     
                     Text(carrierName)
                         .font(DesignSystem.Fonts.bigTitle2)
-                        .foregroundColor(DesignSystem.Colors.textPrimary)
+                        .foregroundStyle(DesignSystem.Colors.textPrimary)
                         .frame(width: 343, alignment: .leading)
                     
                     VStack(spacing: 0) {

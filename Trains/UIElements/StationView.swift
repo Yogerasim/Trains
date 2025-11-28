@@ -19,17 +19,17 @@ struct StationView: View {
                     .resizable()
                     .scaledToFill()
                     .frame(width: 38, height: 38)
-                    .cornerRadius(12)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
                 
                 VStack(alignment: .leading, spacing: subtitle != nil ? 2 : 0) {
                     Text(stationName)
                         .font(DesignSystem.Fonts.regular17)
-                        .foregroundColor(.black)
+                        .foregroundStyle(.black)
                     
                     if let subtitle {
                         Text(subtitle)
                             .font(DesignSystem.Fonts.regular12)
-                            .foregroundColor(DesignSystem.Colors.redUniversal)
+                            .foregroundStyle(DesignSystem.Colors.redUniversal)
                             .lineLimit(1)
                             .truncationMode(.tail)
                     }
@@ -40,7 +40,7 @@ struct StationView: View {
                 
                 Text(rightTopText)
                     .font(DesignSystem.Fonts.regular12)
-                    .foregroundColor(.black)
+                    .foregroundStyle(.black)
             }
             .padding(.horizontal, 10)
             .frame(width: 346, height: 52)
@@ -49,7 +49,7 @@ struct StationView: View {
             HStack {
                 Text(leftBottomText)
                     .font(DesignSystem.Fonts.regular17)
-                    .foregroundColor(.black)
+                    .foregroundStyle(.black)
                 
                 Spacer()
                 
@@ -61,7 +61,7 @@ struct StationView: View {
                 
                 Text(middleBottomText)
                     .font(DesignSystem.Fonts.regular12)
-                    .foregroundColor(.black)
+                    .foregroundStyle(.black)
                 
                 Spacer()
                 
@@ -73,14 +73,14 @@ struct StationView: View {
                 
                 Text(rightBottomText)
                     .font(DesignSystem.Fonts.regular17)
-                    .foregroundColor(.black)
+                    .foregroundStyle(.black)
             }
             .frame(width: 326, height: 52)
             .padding(.horizontal, 50)
         }
         .frame(width: 346, height: 104)
         .background(DesignSystem.Colors.lightGray)
-        .cornerRadius(16)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
     }
 }
 

@@ -17,7 +17,7 @@ struct SelectableRowView: View {
         HStack {
             Text(title)
                 .font(DesignSystem.Fonts.regular17)
-                .foregroundColor(DesignSystem.Colors.textPrimary)
+                .foregroundStyle(DesignSystem.Colors.textPrimary)
             
             Spacer()
             
@@ -43,14 +43,14 @@ struct SelectableRowView: View {
                             .background(
                                 isSelected ? fillColor : Color.clear
                             )
-                            .cornerRadius(5)
+                            .clipShape(RoundedRectangle(cornerRadius: 5))
                         
                         if isSelected {
                             Image(systemName: "checkmark")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 14, height: 14)
-                                .foregroundColor(checkColor)
+                                .foregroundStyle(checkColor)
                         }
                         
                     } else {

@@ -23,7 +23,7 @@ struct SelectionListView: View {
             
             HStack(spacing: 8) {
                 Image(systemName: "magnifyingglass")
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.gray)
                 
                 TextField("Введите запрос", text: $searchText)
                 
@@ -32,32 +32,30 @@ struct SelectionListView: View {
                         searchText = ""
                     } label: {
                         Image(systemName: "xmark.circle.fill")
-                            .foregroundColor(.gray)
+                            .foregroundStyle(.gray)
                     }
                 }
             }
             .padding()
             .background(Color(.systemGray6))
-            .cornerRadius(12)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(.horizontal, 16)
             .padding(.top, 12)
-            
-            if filteredItems.isEmpty {
-                Spacer()
-                PlaceholderView(type: .noData)
-                Spacer()
-            } else {
-                ScrollView {
-                    LazyVStack(spacing: 0) {
-                        ForEach(filteredItems, id: \.self) { item in
-                            CityRowView(city: item) {
-                                onSelect(item)
-                            }
-                        }
+
+            ScrollView {
+                LazyVStack(spacing: 0) {
+                    ForEach(filteredItems, id: \.self) { item in
+                        CityRowView(city: item) { onSelect(item) }
                     }
-                    .padding(.top, 8)
                 }
+                .padding(.top, 8)
             }
+            .opacity(filteredItems.isEmpty ? 0 : 1)
+            .animation(.easeInOut, value: filteredItems.isEmpty)
+
+            PlaceholderView(type: .noData)
+                .opacity(filteredItems.isEmpty ? 1 : 0)
+                .animation(.easeInOut, value: filteredItems.isEmpty)
             
             Spacer()
         }

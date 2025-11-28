@@ -18,7 +18,7 @@ struct PrimaryButton: View {
                     Spacer()
                     Text(title)
                         .font(DesignSystem.Fonts.title)
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                     if showBadge {
                         Circle()
                             .fill(DesignSystem.Colors.redUniversal)

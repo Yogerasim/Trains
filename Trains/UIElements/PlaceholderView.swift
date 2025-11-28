@@ -17,7 +17,7 @@ struct PlaceholderView: View {
                 
                 Text(type.title)
                     .font(DesignSystem.Fonts.bigTitle2)
-                    .foregroundColor(DesignSystem.Colors.textPrimary)
+                    .foregroundStyle(DesignSystem.Colors.textPrimary)
                     .multilineTextAlignment(.center)
             }
             Spacer()
