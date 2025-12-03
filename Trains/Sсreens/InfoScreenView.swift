@@ -41,7 +41,7 @@ struct InfoScreenView: View {
                         .padding(.top, 16)
                     
                     Text(carrierName)
-                        .font(DesignSystem.Fonts.bigTitle2)
+                        .font(DesignSystem.Fonts.bold24)
                         .foregroundStyle(DesignSystem.Colors.textPrimary)
                         .frame(width: 343, alignment: .leading)
                     

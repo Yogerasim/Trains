@@ -11,7 +11,7 @@ struct MainTabView: View {
                 }
                 .tag(0)
             
-            BlueScreen()
+            SettingsView()
                 .tabItem {
                     Image(selectedTab == 1 ? .settingsActive : .settings)
                 }

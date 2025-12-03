@@ -27,7 +27,7 @@ struct DesignSystem {
         
         static let title = bold(17)
         static let bigTitle = bold(34)
-        static let bigTitle2 = bold(24)
+        static let bold24 = bold(24)
         static let medium17 = medium(17)
         static let medium12 = medium(12)
         static let regular14 = regular(14)

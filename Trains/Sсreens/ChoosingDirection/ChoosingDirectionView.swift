@@ -113,3 +113,6 @@ private struct DirectionOptionButton: View {
         .contentShape(Rectangle())
     }
 }
+#Preview {
+    MainTabView()
+}
