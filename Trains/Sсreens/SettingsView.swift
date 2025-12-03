@@ -1,7 +1,14 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @AppStorage("isDarkMode") private var isDarkMode = false
+    @AppStorage("themeMode") private var themeMode: ThemeMode = .system
+
+    private var isDarkMode: Binding<Bool> {
+        Binding(
+            get: { themeMode == .dark },
+            set: { themeMode = $0 ? .dark : .system }
+        )
+    }
     
     @State private var showAgreement = false
     
@@ -9,7 +16,7 @@ struct SettingsView: View {
         
         VStack {
             VStack(spacing: 0) {
-                SettingToggleRow(title: "Тёмная тема", isOn: $isDarkMode)
+                SettingToggleRow(title: "Тёмная тема", isOn: isDarkMode)
                 CityRowView(city: "Пользовательское соглашение") {
                     showAgreement = true
                 }
