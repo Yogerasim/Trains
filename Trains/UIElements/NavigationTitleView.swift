@@ -20,7 +20,7 @@ struct NavigationTitleView: View {
                 Spacer()
                 
                 Text(title)
-                    .font(DesignSystem.Fonts.title)
+                    .font(DesignSystem.Fonts.bold17)
                     .foregroundStyle(DesignSystem.Colors.textPrimary)
                 
                 Spacer()

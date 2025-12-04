@@ -10,7 +10,7 @@ struct ButtonSearch: View {
             action?()
         }) {
             Text(title)
-                .font(DesignSystem.Fonts.title)
+                .font(DesignSystem.Fonts.bold17)
                 .foregroundStyle(.white)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }

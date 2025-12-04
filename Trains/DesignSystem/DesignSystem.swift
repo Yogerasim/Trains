@@ -25,16 +25,17 @@ struct DesignSystem {
             .system(size: size, weight: .bold)
         }
         
-        static let title = bold(17)
-        static let bigTitle = bold(34)
+        static let bold17 = bold(17)
+        static let bold34 = bold(34)
         static let bold24 = bold(24)
         static let medium17 = medium(17)
         static let medium12 = medium(12)
         static let regular14 = regular(14)
         static let regular17 = regular(17)
+        static let regular20 = regular(20)
         static let regular12 = regular(12)
-        static let headline = semibold(17)
-        static let subheadline = medium(15)
+        static let semibold17 = semibold(17)
+        static let medium15 = medium(15)
         static let bold19 = bold(19)
     }
 }
