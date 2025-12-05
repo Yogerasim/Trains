@@ -17,7 +17,7 @@ struct PrimaryButton: View {
                 HStack(spacing: 8) {
                     Spacer()
                     Text(title)
-                        .font(DesignSystem.Fonts.title)
+                        .font(DesignSystem.Fonts.bold17)
                         .foregroundStyle(.white)
                     if showBadge {
                         Circle()

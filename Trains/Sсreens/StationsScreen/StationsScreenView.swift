@@ -60,7 +60,7 @@ struct StationsScreenView: View {
             }
             
             Text(headerText)
-                .font(DesignSystem.Fonts.bigTitle2)
+                .font(DesignSystem.Fonts.bold24)
                 .foregroundStyle(DesignSystem.Colors.textPrimary)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 26)

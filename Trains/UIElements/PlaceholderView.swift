@@ -16,7 +16,7 @@ struct PlaceholderView: View {
                 }
                 
                 Text(type.title)
-                    .font(DesignSystem.Fonts.bigTitle2)
+                    .font(DesignSystem.Fonts.bold24)
                     .foregroundStyle(DesignSystem.Colors.textPrimary)
                     .multilineTextAlignment(.center)
             }
