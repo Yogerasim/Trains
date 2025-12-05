@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct StoryView: View {
+struct ContainerView: View {
     let story: Story
     private let cornerRadius: CGFloat = 40
     
@@ -45,5 +45,5 @@ struct StoryView: View {
 }
 
 #Preview {
-    StoryView(story: .story7)
+    ContainerView(story: .story6)
 }

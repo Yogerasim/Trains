@@ -1,12 +1,35 @@
 import SwiftUI
 
 struct ChoosingDirectionView: View {
-    
+
     @State private var model = ChoosingDirectionViewModel()
-    
+    @StateObject private var viewModel = AppViewModel()
+
+    @State private var showStories = false
+    @State private var selectedIndex = 0
+    @State private var viewedStoryIDs: Set<UUID> = []
+    let stories = Story.all
+
     var body: some View {
         VStack(spacing: 16) {
+
+            StoryCardsScrollView(
+                stories: stories,
+                onSelect: { index in
+                    selectedIndex = index
+                    DispatchQueue.main.async {
+                        showStories = true
+                    }
+                },
+                viewedIDs: viewedStoryIDs,
+                currentStoryID: nil
+            )
+            .padding(.leading, 15)
+            .padding(.top, 16)
+
             content
+            Spacer()
+            
         }
         .fullScreenCover(item: $model.navigation) { nav in
             switch nav {
@@ -26,7 +49,20 @@ struct ChoosingDirectionView: View {
                 )
             }
         }
+        .fullScreenCover(isPresented: $showStories) {
+            StoriesView(
+                stories: stories,
+                startIndex: selectedIndex,
+                onViewed: { id in
+                    viewedStoryIDs.insert(id)
+                },
+                onClose: {
+                    showStories = false
+                }
+            )
+        }
     }
+
     
     
     // MARK: - Content

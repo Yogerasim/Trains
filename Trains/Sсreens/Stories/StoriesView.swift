@@ -1,7 +1,7 @@
 import SwiftUI
 import Combine
 
-struct ContentView: View {
+struct StoriesView: View {
     struct Configuration {
         let timerTickInternal: TimeInterval
         let progressPerTick: CGFloat
@@ -17,6 +17,7 @@ struct ContentView: View {
     }
     private let stories: [Story]
     private let configuration: Configuration
+    private let onClose: () -> Void
     
     @State private var progress: CGFloat = 0
     @State private var timer: Timer.TimerPublisher
@@ -24,6 +25,8 @@ struct ContentView: View {
     
     @GestureState private var dragOffset: CGFloat = 0
     @State private var animateOffset: CGFloat = 0
+    @State private var viewedStoryIDs: Set<UUID> = []
+    private let onViewed: (UUID) -> Void
     
     private var count: Int { stories.count }
     
@@ -35,10 +38,18 @@ struct ContentView: View {
     private var nextStory: Story { stories[nextIndex] }
     private var prevStory: Story { stories[prevIndex] }
     
-    init(stories: [Story] = [ .story1, .story2, .story3, .story4, .story5, .story6, .story7 ]) {
+    init(
+        stories: [Story],
+        startIndex: Int,
+        onViewed: @escaping (UUID) -> Void,
+        onClose: @escaping () -> Void
+    ) {
         self.stories = stories
-        configuration = Configuration(storiesCount: stories.count)
-        timer = Self.createTimer(configuration: configuration)
+        self.configuration = Configuration(storiesCount: stories.count)
+        self.timer = Self.createTimer(configuration: configuration)
+        self._progress = State(initialValue: (CGFloat(startIndex) + 0.0001) / CGFloat(stories.count))
+        self.onViewed = onViewed
+        self.onClose = onClose
     }
     
     var body: some View {
@@ -46,18 +57,21 @@ struct ContentView: View {
             let width = geo.size.width
             
             ZStack(alignment: .topTrailing) {
-                StoryView(story: prevStory)
+                ContainerView(story: prevStory)
                     .offset(x: -width + animateOffset + dragOffset)
-                StoryView(story: currentStory)
+                ContainerView(story: currentStory)
                     .offset(x: animateOffset + dragOffset)
-                StoryView(story: nextStory)
+                ContainerView(story: nextStory)
                     .offset(x: width + animateOffset + dragOffset)
                 ProgressBar(numberOfSections: stories.count, progress: progress)
                     .padding(.init(top: 28, leading: 12, bottom: 12, trailing: 12))
                 
-                CloseButton(action: { print("Close Story") })
+                CloseButton(action: {
+                    onClose()
+                    print("Close Story") })
                     .padding(.top, 57)
                     .padding(.trailing, 12)
+                
             }
             
             .gesture(dragGesture(screenWidth: width))
@@ -111,6 +125,8 @@ struct ContentView: View {
         progress = next
     }
     private func advanceToNextStory() {
+        viewedStoryIDs.insert(currentStory.id)
+        onViewed(currentStory.id)
         progress = CGFloat((currentIndex + 1) % count) / CGFloat(count)
         resetTimer()
     }
@@ -129,8 +145,14 @@ struct ContentView: View {
     private static func createTimer(configuration: Configuration) -> Timer.TimerPublisher {
         Timer.publish(every: configuration.timerTickInternal, on: .main, in: .common)
     }
+    
 }
 
 #Preview {
-    ContentView()
+    StoriesView(
+        stories: Story.all,
+        startIndex: 0,
+        onViewed: { _ in },
+        onClose: { }
+    )
 }
