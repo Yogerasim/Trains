@@ -92,9 +92,19 @@ struct StoriesView: View {
     }
 
     private func tapGesture() -> some Gesture {
-        TapGesture()
-            .onEnded {
-                advanceToNextStory()
+        DragGesture(minimumDistance: 0)
+            .onEnded { value in
+                let x = value.location.x
+                let width = UIScreen.main.bounds.width
+
+                let leftThreshold = width * 0.33
+                let rightThreshold = width * 0.66
+
+                if x < leftThreshold {
+                    advanceToPreviousStory()
+                } else {
+                    advanceToNextStory()
+                }
             }
     }
 
