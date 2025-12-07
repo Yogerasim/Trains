@@ -151,16 +151,17 @@ struct StoriesView: View {
 
     private func tick() {
         guard isViewAppeared else { return }
-        let next = progress + configuration.progressPerTick
-        if next >= 1 {
-            progress = 1
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                advanceToNextStory()
-            }
-        } else {
-            progress = next
+        progress += configuration.progressPerTick
+        if progress >= 1 {
+            progress = 0
+            advanceToNextStoryWithoutReset()
         }
+    }
+    private func advanceToNextStoryWithoutReset() {
+        reportViewedIfNeeded(for: currentStory)
+        currentIndex = (currentIndex + 1) % count
+        startIndex = currentIndex
+        reportViewedIfNeeded(for: currentStory)
     }
 
     private func normalizedOverallProgress() -> CGFloat {
