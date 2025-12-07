@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct ChoosingDirectionView: View {
-
     @State private var model = ChoosingDirectionViewModel()
     @StateObject private var viewModel = AppViewModel()
 
@@ -12,7 +11,6 @@ struct ChoosingDirectionView: View {
 
     var body: some View {
         VStack(spacing: 16) {
-
             StoryCardsScrollView(
                 stories: stories,
                 onSelect: { index in
@@ -24,12 +22,12 @@ struct ChoosingDirectionView: View {
                 viewedIDs: viewedStoryIDs,
                 currentStoryID: nil
             )
-            .padding(.leading, 15)
             .padding(.top, 16)
-
+            Spacer().frame(height: 12)
             content
+                .padding(.horizontal, 16)
+
             Spacer()
-            
         }
         .fullScreenCover(item: $model.navigation) { nav in
             switch nav {
@@ -52,7 +50,7 @@ struct ChoosingDirectionView: View {
         .fullScreenCover(isPresented: $showStories) {
             StoriesView(
                 stories: stories,
-                startIndex: selectedIndex,
+                startIndex: $selectedIndex,
                 onViewed: { id in
                     viewedStoryIDs.insert(id)
                 },
@@ -63,92 +61,84 @@ struct ChoosingDirectionView: View {
         }
     }
 
-    
-    
-    // MARK: - Content
     @ViewBuilder
     private var content: some View {
         switch model.screenState {
         case .content:
             VStack(spacing: 16) {
                 directionCard
-                
+
                 ButtonSearch(title: "Найти") {
                     model.openStations()
                 }
                 .opacity(model.bothSelected ? 1 : 0)
                 .animation(.easeInOut, value: model.bothSelected)
             }
-            
+
         case .noInternet:
             PlaceholderView(type: .noInternet)
                 .frame(maxHeight: .infinity)
-            
+
         case .serverError:
             PlaceholderView(type: .serverError)
                 .frame(maxHeight: .infinity)
         }
     }
-    
-    
-    // MARK: - Direction card
+
     private var directionCard: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 20)
                 .fill(DesignSystem.Colors.blueUniversal)
-                .frame(width: 343)
-            
+
             HStack {
                 VStack(spacing: 0) {
                     Button(action: { model.openCityFrom() }) {
                         DirectionOptionButton(title: model.fromTitle)
                     }
-                    
+
                     Button(action: { model.openCityTo() }) {
                         DirectionOptionButton(title: model.toTitle)
                     }
                 }
-                .frame(width: 259)
                 .background(Color.white)
                 .clipShape(RoundedRectangle(cornerRadius: 20))
-                .padding(.leading, 16)
-                
+
                 Spacer()
-                
+
                 Button(action: model.swapDirections) {
                     Image("Сhange")
                         .resizable()
                         .frame(width: 36, height: 36)
                 }
-                .padding(.trailing, 16)
             }
+            .padding(.horizontal, 16)
         }
-        .frame(width: 343, height: 128)
+        .frame(height: 128)
+        .frame(maxWidth: .infinity)
     }
 }
 
-
-// MARK: - DirectionOptionButton
 private struct DirectionOptionButton: View {
     let title: String
-    
+
     private var isPlaceholder: Bool {
         title == "Откуда" || title == "Куда"
     }
-    
+
     var body: some View {
         HStack {
             Text(title)
                 .font(.system(size: 17, weight: .medium))
                 .foregroundStyle(isPlaceholder ? .gray : .black)
-            
+
             Spacer()
         }
         .frame(height: 48)
-        .padding(.horizontal, 16) 
+        .padding(.horizontal, 16)
         .contentShape(Rectangle())
     }
 }
+
 #Preview {
     MainTabView()
 }

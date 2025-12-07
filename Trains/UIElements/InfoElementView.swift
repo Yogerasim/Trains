@@ -1,16 +1,15 @@
 import SwiftUI
 
 struct InfoElementView: View {
-    
     let title: String
     let subtitle: String
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title)
                 .font(DesignSystem.Fonts.regular17)
                 .foregroundStyle(DesignSystem.Colors.textPrimary)
-            
+
             Text(subtitle)
                 .font(DesignSystem.Fonts.regular12)
                 .foregroundStyle(DesignSystem.Colors.blueUniversal)

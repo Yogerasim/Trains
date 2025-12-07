@@ -1,10 +1,9 @@
 import SwiftUI
 
 struct CityRowView: View {
-    
     let city: String
     var onSelect: (() -> Void)? = nil
-    
+
     var body: some View {
         Button(action: {
             onSelect?()
@@ -14,9 +13,9 @@ struct CityRowView: View {
                     .font(DesignSystem.Fonts.regular17)
                     .foregroundStyle(DesignSystem.Colors.textPrimary)
                     .padding(.leading, 16)
-                
+
                 Spacer()
-                
+
                 Image(systemName: "chevron.right")
                     .resizable()
                     .scaledToFit()

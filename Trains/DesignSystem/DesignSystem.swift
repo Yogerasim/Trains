@@ -1,30 +1,32 @@
 import SwiftUI
 
-struct DesignSystem {
-    
-    struct Colors {
+enum DesignSystem {
+    enum Colors {
         static let blueUniversal = Color(hex: "#3772E7")
         static let redUniversal = Color(hex: "#F56B6C")
         static let lightGray = Color(hex: "#EEEEEE")
-        
+
         static let background = Color("AppBackground")
         static let textPrimary = Color("TextPrimary")
     }
-    
-    struct Fonts {
+
+    enum Fonts {
         static func regular(_ size: CGFloat) -> Font {
             .system(size: size, weight: .regular)
         }
+
         static func medium(_ size: CGFloat) -> Font {
             .system(size: size, weight: .medium)
         }
+
         static func semibold(_ size: CGFloat) -> Font {
             .system(size: size, weight: .semibold)
         }
+
         static func bold(_ size: CGFloat) -> Font {
             .system(size: size, weight: .bold)
         }
-        
+
         static let bold17 = bold(17)
         static let bold34 = bold(34)
         static let bold24 = bold(24)
@@ -45,7 +47,7 @@ extension Color {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
         var int: UInt64 = 0
         Scanner(string: hex).scanHexInt64(&int)
-        
+
         let r, g, b: UInt64
         switch hex.count {
         case 6:
@@ -53,7 +55,7 @@ extension Color {
         default:
             (r, g, b) = (1, 1, 0)
         }
-        
+
         self.init(
             .sRGB,
             red: Double(r) / 255,
@@ -63,4 +65,3 @@ extension Color {
         )
     }
 }
-

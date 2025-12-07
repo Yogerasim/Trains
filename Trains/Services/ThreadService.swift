@@ -8,15 +8,14 @@ protocol ThreadServiceProtocol {
 }
 
 final class ThreadService: ThreadServiceProtocol {
-    
     private let client: Client
     private let apikey: String
-    
+
     init(client: Client = APIConfig.client, apikey: String = APIConfig.apiKey) {
         self.client = client
         self.apikey = apikey
     }
-    
+
     func getThread(uid: String, from: String? = nil, to: String? = nil, date: String? = nil) async throws -> Thread {
         let query = Operations.getThread.Input.Query(
             apikey: apikey,
@@ -31,6 +30,7 @@ final class ThreadService: ThreadServiceProtocol {
         let response = try await client.getThread(query: query)
         return try response.ok.body.json
     }
+
     func testFetchThread(station: String) {
         Task {
             do {
@@ -38,7 +38,6 @@ final class ThreadService: ThreadServiceProtocol {
 
                 print("Fetching schedule for station: \(station)")
 
-                // 1) Получаем расписание
                 let schedule = try await scheduleService.getSchedule(
                     station: station,
                     date: nil,
@@ -51,7 +50,6 @@ final class ThreadService: ThreadServiceProtocol {
                     return
                 }
 
-                // ✅ Берём только ОДНУ нитку для теста
                 let firstThread = scheduleList.first?.thread
 
                 guard let uid = firstThread?.uid else {
@@ -61,7 +59,6 @@ final class ThreadService: ThreadServiceProtocol {
 
                 print("➡️ Fetching ONLY FIRST thread: \(uid)")
 
-                // 2) Загружаем детали нитки — всего ОДИН запрос
                 let threadDetails = try await self.getThread(uid: uid)
 
                 print("✅ Thread details received:")
@@ -73,4 +70,3 @@ final class ThreadService: ThreadServiceProtocol {
         }
     }
 }
-

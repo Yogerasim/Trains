@@ -3,14 +3,13 @@ import SwiftUI
 struct ContainerView: View {
     let story: Story
     private let cornerRadius: CGFloat = 40
-    
+
     var body: some View {
         GeometryReader { geo in
             let width = geo.size.width
             let height = geo.size.height
-            
+
             ZStack {
-                
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .fill(.black)
                     .frame(width: width, height: height)
@@ -20,17 +19,19 @@ struct ContainerView: View {
                             .scaledToFill()
                             .frame(width: width, height: height)
                             .clipped()
-                        
                     )
-                
-                VStack(alignment: .leading, spacing: 8) {
+
+                VStack(alignment: .leading, spacing: 20) {
                     Text(story.title)
-                        .font(.system(size: 24, weight: .bold))
+                        .font(DesignSystem.Fonts.bold34)
                         .foregroundStyle(.white)
-                    
+                        .lineLimit(2)
+
                     Text(story.description)
-                        .font(.system(size: 16))
-                        .foregroundStyle(.white.opacity(0.85))
+                        .font(DesignSystem.Fonts.regular20)
+                        .foregroundStyle(.white)
+                        .lineLimit(3)
+                        .padding(.bottom, 30)
                 }
                 .padding(24)
                 .frame(maxWidth: .infinity, maxHeight: .infinity,

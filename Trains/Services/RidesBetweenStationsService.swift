@@ -8,7 +8,6 @@ protocol RidesBetweenStationsServiceProtocol {
 }
 
 final class RidesBetweenStationsService: RidesBetweenStationsServiceProtocol {
-
     private let client: Client
     private let apikey: String
 
@@ -18,7 +17,6 @@ final class RidesBetweenStationsService: RidesBetweenStationsServiceProtocol {
     }
 
     func getRides(from: String, to: String, date: String?) async throws -> RidesResponse {
-
         let query = Operations.getRidesBetweenStations.Input.Query(
             apikey: apikey,
             from: from,

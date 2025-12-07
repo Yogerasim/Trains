@@ -2,7 +2,7 @@ enum ChoosingDirectionNavigation: Identifiable {
     case cityFrom
     case cityTo
     case stations
-    
+
     var id: Self { self }
 }
 

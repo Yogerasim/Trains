@@ -2,16 +2,12 @@ import SwiftUI
 
 @Observable
 final class ChoosingDirectionViewModel {
+    var fromCity: String?
+    var toCity: String?
 
-    // MARK: - Data
-    var fromCity: String? = nil
-    var toCity: String? = nil
-
-    // MARK: - UI
     var screenState: ScreenState = .content
-    var navigation: ChoosingDirectionNavigation? = nil
+    var navigation: ChoosingDirectionNavigation?
 
-    // MARK: - Computed Titles
     var fromTitle: String {
         fromCity ?? "Откуда"
     }
@@ -20,12 +16,10 @@ final class ChoosingDirectionViewModel {
         toCity ?? "Куда"
     }
 
-    // MARK: - Logic
     var bothSelected: Bool {
         fromCity != nil && toCity != nil
     }
 
-    // MARK: - Actions
     func selectCityFrom(_ city: String) {
         fromCity = city
         navigation = nil

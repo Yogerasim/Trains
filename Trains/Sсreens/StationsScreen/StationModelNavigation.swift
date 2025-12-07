@@ -1,4 +1,5 @@
 import Foundation
+
 struct FilterNav: Hashable {}
 struct InfoNav: Hashable {
     let carrierName: String

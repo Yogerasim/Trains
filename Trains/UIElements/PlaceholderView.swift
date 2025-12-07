@@ -1,9 +1,8 @@
 import SwiftUI
 
 struct PlaceholderView: View {
-    
     let type: PlaceholderType
-    
+
     var body: some View {
         VStack {
             Spacer()
@@ -14,7 +13,7 @@ struct PlaceholderView: View {
                         .scaledToFit()
                         .frame(width: 223, height: 223)
                 }
-                
+
                 Text(type.title)
                     .font(DesignSystem.Fonts.bold24)
                     .foregroundStyle(DesignSystem.Colors.textPrimary)
@@ -26,25 +25,26 @@ struct PlaceholderView: View {
         .padding(.horizontal, 16)
     }
 }
+
 #Preview {
     ScrollView {
         VStack(spacing: 40) {
-            
             PlaceholderView(type: .noInternet)
                 .frame(height: 400)
-            
+
             PlaceholderView(type: .serverError)
                 .frame(height: 400)
-            
+
             PlaceholderView(type: .emptyMessage)
                 .frame(height: 300)
-            
+
             PlaceholderView(type: .noData)
                 .frame(height: 300)
         }
         .padding()
     }
 }
+
 enum PlaceholderType {
     case noInternet
     case serverError
@@ -61,7 +61,7 @@ extension PlaceholderType {
         case .noData: "Город не найден"
         }
     }
-    
+
     var imageName: String? {
         switch self {
         case .noInternet: "NoInternet"

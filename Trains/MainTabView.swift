@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MainTabView: View {
     @State private var selectedTab = 0
-    
+
     var body: some View {
         TabView(selection: $selectedTab) {
             ChoosingDirectionView()
@@ -10,7 +10,7 @@ struct MainTabView: View {
                     Image(selectedTab == 0 ? .scheduleActive : .schedule)
                 }
                 .tag(0)
-            
+
             SettingsView()
                 .tabItem {
                     Image(selectedTab == 1 ? .settingsActive : .settings)

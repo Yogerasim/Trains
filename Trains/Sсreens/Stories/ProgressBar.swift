@@ -38,7 +38,7 @@ private struct MaskView: View {
 
     var body: some View {
         HStack {
-            ForEach(0..<numberOfSections, id: \.self) { _ in
+            ForEach(0 ..< numberOfSections, id: \.self) { _ in
                 MaskFragmentView()
             }
         }
@@ -53,4 +53,3 @@ private struct MaskFragmentView: View {
             .foregroundStyle(.white)
     }
 }
-

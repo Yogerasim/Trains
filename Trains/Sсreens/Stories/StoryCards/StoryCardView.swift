@@ -5,10 +5,10 @@ struct StoryCardView: View {
     let title: String
     let isViewed: Bool
     let isCurrent: Bool
-    
+
     private let width: CGFloat = 94
     private let height: CGFloat = 140
-    
+
     var body: some View {
         ZStack(alignment: .bottomLeading) {
             image
@@ -22,7 +22,7 @@ struct StoryCardView: View {
                 RoundedRectangle(cornerRadius: 16)
                     .strokeBorder(DesignSystem.Colors.blueUniversal, lineWidth: 4)
             }
-            
+
             Text(title)
                 .font(DesignSystem.Fonts.regular12)
                 .foregroundColor(.white)
@@ -31,6 +31,8 @@ struct StoryCardView: View {
                 .padding(.leading, 10)
                 .padding(.bottom, 10)
                 .opacity(isViewed ? 0.5 : 1.0)
+                .lineSpacing(0.4)
+                .frame(maxWidth: 85, alignment: .leading)
         }
         .frame(width: width, height: height)
     }

@@ -15,7 +15,7 @@ private struct TrainsApp: App {
             MainTabView()
                 .preferredColorScheme(
                     themeMode == .system ? nil :
-                    (themeMode == .dark ? .dark : .light)
+                        (themeMode == .dark ? .dark : .light)
                 )
         }
     }

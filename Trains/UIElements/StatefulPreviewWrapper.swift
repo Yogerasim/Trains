@@ -1,6 +1,5 @@
 import SwiftUI
 
-/// A helper for using `@State` bindings in SwiftUI previews.
 struct StatefulPreviewWrapper<Value, Content: View>: View {
     @State private var value: Value
     var content: (Binding<Value>) -> Content

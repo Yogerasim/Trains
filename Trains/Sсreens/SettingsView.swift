@@ -9,11 +9,10 @@ struct SettingsView: View {
             set: { themeMode = $0 ? .dark : .system }
         )
     }
-    
+
     @State private var showAgreement = false
-    
+
     var body: some View {
-        
         VStack {
             VStack(spacing: 0) {
                 SettingToggleRow(title: "Тёмная тема", isOn: isDarkMode)
@@ -26,7 +25,7 @@ struct SettingsView: View {
                 Text("Приложение использует API «Яндекс.Расписания»")
                     .font(DesignSystem.Fonts.regular12)
                     .foregroundStyle(DesignSystem.Colors.textPrimary)
-                
+
                 Text("Версия 1.0 (beta)")
                     .font(DesignSystem.Fonts.regular12)
                     .foregroundStyle(DesignSystem.Colors.textPrimary)
@@ -34,12 +33,11 @@ struct SettingsView: View {
             .padding(.bottom, 32)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .fullScreenCover(isPresented: $showAgreement) {   // ← тут
-                    UserAgreementView {
-                        showAgreement = false         // ← закрываем
-                    }
-                }
-        
+        .fullScreenCover(isPresented: $showAgreement) {
+            UserAgreementView {
+                showAgreement = false
+            }
+        }
     }
 }
 

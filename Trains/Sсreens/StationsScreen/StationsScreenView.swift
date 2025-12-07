@@ -1,18 +1,17 @@
 import SwiftUI
 
 struct StationsScreenView: View {
-    
     let headerText: String
     let stations: [StationData]
-    var onBack: (() -> Void)
-    
+    var onBack: () -> Void
+
     @State private var path = NavigationPath()
     @State private var hasActiveFilters = false
     @State private var filteredStations: [StationData] = []
-    
+
     @State private var showNoInternet = false
     @State private var showServerError = false
-    
+
     var body: some View {
         ZStack {
             NavigationStack(path: $path) {
@@ -35,7 +34,7 @@ struct StationsScreenView: View {
                     .navigationBarBackButtonHidden(true)
             }
             .onAppear { filteredStations = stations }
-            
+
             if showNoInternet {
                 ZStack {
                     Color.white.ignoresSafeArea()
@@ -51,20 +50,19 @@ struct StationsScreenView: View {
             }
         }
     }
-    
+
     private var content: some View {
         VStack(spacing: 30) {
-            
             NavigationTitleView(title: "") {
                 onBack()
             }
-            
+
             Text(headerText)
                 .font(DesignSystem.Fonts.bold24)
                 .foregroundStyle(DesignSystem.Colors.textPrimary)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 26)
-            
+
             if filteredStations.isEmpty {
                 PlaceholderView(type: .emptyMessage)
                     .frame(maxWidth: .infinity)
@@ -97,9 +95,9 @@ struct StationsScreenView: View {
                     .padding(.bottom, 100)
                 }
             }
-            
+
             Spacer()
-            
+
             PrimaryButton(title: "Уточнить время", showBadge: hasActiveFilters) {
                 path.append(FilterNav())
             }
@@ -109,23 +107,22 @@ struct StationsScreenView: View {
     }
 }
 
-// MARK: - Wrapper для фильтров
 struct FilterScreenViewWrapper: View {
     @Binding var path: NavigationPath
     @Binding var hasActiveFilters: Bool
     @Binding var filteredStations: [StationData]
-    
+
     let allStations: [StationData]
-    
+
     @State private var timeSelections = Array(repeating: false, count: 3)
     @State private var showTransfers = false
-    
+
     var body: some View {
         FilterScreenView(
             timeOptions: [
                 "Утро 06:00 - 12:00",
                 "День 12:00 - 18:00",
-                "Вечер 18:00 - 00:00"
+                "Вечер 18:00 - 00:00",
             ],
             timeSelections: $timeSelections,
             showTransfers: $showTransfers,
@@ -134,17 +131,17 @@ struct FilterScreenViewWrapper: View {
             },
             onApply: {
                 hasActiveFilters = timeSelections.contains(true) || showTransfers
-                
+
                 filteredStations = allStations.filter { _ in
                     hasActiveFilters ? Bool.random() : true
                 }
-                
+
                 path.removeLast()
             }
         )
     }
 }
-// MARK: - Preview
+
 #Preview {
     let sampleStations = [
         StationData(
@@ -164,9 +161,9 @@ struct FilterScreenViewWrapper: View {
             leftBottomText: "00:10",
             middleBottomText: "8 часов",
             rightBottomText: "08:10"
-        )
+        ),
     ]
-    
+
     StationsScreenView(
         headerText: "Москва (Ярославский вокзал) → Санкт-Петербург (Балтийский вокзал)",
         stations: sampleStations,

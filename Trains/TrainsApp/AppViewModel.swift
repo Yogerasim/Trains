@@ -1,7 +1,6 @@
 import Combine
 
 final class AppViewModel: ObservableObject {
-
     init() {
         guard APIConfig.runTests else {
             print("Tests disabled")
