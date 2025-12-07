@@ -71,7 +71,7 @@ struct StoriesView: View {
             }
             .contentShape(Rectangle())
             .gesture(dragGesture(screenWidth: width))
-            .gesture(tapGesture())
+            .gesture(tapGesture(screenWidth: width))
             .onAppear {
                 currentIndex = min(max(0, startIndex), max(0, count - 1))
                 progress = 0
@@ -91,15 +91,11 @@ struct StoriesView: View {
         }
     }
 
-    private func tapGesture() -> some Gesture {
+    private func tapGesture(screenWidth: CGFloat) -> some Gesture {
         DragGesture(minimumDistance: 0)
             .onEnded { value in
                 let x = value.location.x
-                let width = UIScreen.main.bounds.width
-
-                let leftThreshold = width * 0.33
-                let rightThreshold = width * 0.66
-
+                let leftThreshold = screenWidth * 0.33
                 if x < leftThreshold {
                     advanceToPreviousStory()
                 } else {
