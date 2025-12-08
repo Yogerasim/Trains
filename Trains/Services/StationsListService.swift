@@ -20,8 +20,8 @@ final class StationsListService: StationsListServiceProtocol {
     func getStationsList() async throws -> StationsListResponseType {
         let query = Operations.getStationsList.Input.Query(
             apikey: apikey,
-            format: nil,
-            lang: nil
+            format: .json,
+            lang: "ru_RU"
         )
 
         let response = try await client.getStationsList(query: query)

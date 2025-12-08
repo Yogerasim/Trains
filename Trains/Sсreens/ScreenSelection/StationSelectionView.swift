@@ -1,31 +1,32 @@
 import SwiftUI
 
 struct StationSelectionView: View {
-    var stations: [String] = MockData.stations
+    @StateObject private var vm: StationSelectionViewModel
 
     var onSelect: (String) -> Void = { _ in }
 
-    @State private var showNoInternet = false
-    @State private var showServerError = false
+    init(city: City, onSelect: @escaping (String) -> Void = { _ in }) {
+        _vm = StateObject(wrappedValue: StationSelectionViewModel(city: city))
+        self.onSelect = onSelect
+    }
 
     var body: some View {
         NavigationStack {
-            if showNoInternet {
-                PlaceholderView(type: .noInternet)
-            } else if showServerError {
-                PlaceholderView(type: .serverError)
-            } else {
-                SelectionListView(
-                    title: "Выбор вокзала",
-                    items: stations,
-                    onSelect: onSelect
-                )
-                .navigationBarBackButtonHidden(true)
-            }
+            SelectionListView(
+                title: "Выбор вокзала",
+                items: vm.stations,
+                onSelect: onSelect
+            )
+            .navigationBarBackButtonHidden(true)
         }
     }
 }
 
 #Preview {
-    StationSelectionView()
+    StationSelectionView(
+        city: City(
+            name: "Москва",
+            stations: ["Казанский вокзал", "Ярославский вокзал"]
+        )
+    )
 }
