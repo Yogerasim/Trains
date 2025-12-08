@@ -17,7 +17,12 @@ final class CitySelectionViewModel: ObservableObject {
     func load() async {
         do {
             let data = try await api.getStationsList()
-            cities = data.toCities()
+
+            dump(data)
+            let citiesList = data.toCities()
+            dump(citiesList)
+
+            cities = citiesList
         } catch {
             handleError(error)
         }
@@ -40,23 +45,41 @@ struct City: Identifiable, Hashable {
 
 extension StationsListResponse {
     func toCities() -> [City] {
-        // Unwrap to the list of countries, or return empty if nil
-        guard let countries = self.countries else { return [] }
+        guard let countries = countries else {
+            print("❌ No countries in response")
+            return []
+        }
+
         var result: [City] = []
+
         for country in countries {
+            let countryName = country.title ?? "Unknown Country"
+            print("🌍 Country: \(countryName)")
+
             guard let regions = country.regions else { continue }
+
             for region in regions {
+                let regionName = region.title ?? "Unknown Region"
+                print("  📍 Region: \(regionName)")
+
                 guard let settlements = region.settlements else { continue }
+
                 for settlement in settlements {
-                    let name = settlement.title ?? ""
-                    guard !name.isEmpty else { continue }
-                    let stations = (settlement.stations ?? []).compactMap { $0.title }
-                    result.append(City(name: name, stations: stations))
+                    let cityName = settlement.title ?? ""
+                    guard !cityName.isEmpty else { continue }
+                    print("    🏘 Settlement: \(cityName)")
+
+                    let stations = (settlement.stations ?? [])
+                        .compactMap { $0.title }
+                        .sorted()
+
+                    result.append(City(name: cityName, stations: stations))
                 }
             }
         }
-        // Sort by city name
-        result.sort { $0.name < $1.name }
-        return result
+
+        let sorted = result.sorted { $0.name < $1.name }
+        print("✅ Total cities: \(sorted.count)")
+        return sorted
     }
 }

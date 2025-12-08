@@ -8,44 +8,41 @@ protocol StationsListServiceProtocol {
     func getStationsList() async throws -> StationsListResponseType
 }
 
-final class StationsListService: StationsListServiceProtocol {
+final class StationsListService {
     private let client: Client
-    private let apikey: String
+    private let apiKey: String
 
     init(client: Client = APIConfig.client, apikey: String = APIConfig.apiKey) {
         self.client = client
-        self.apikey = apikey
+        self.apiKey = apikey
     }
 
     func getStationsList() async throws -> StationsListResponseType {
         let query = Operations.getStationsList.Input.Query(
-            apikey: apikey,
-            format: .json,
-            lang: "ru_RU"
+            apikey: apiKey,
+            format: nil,
+            lang: nil
         )
-
         let response = try await client.getStationsList(query: query)
-
         return try response.ok.body.json
     }
 
-    func testFetchStationsList(limitToOneCountry: Bool = true) {
+    // Тестовый метод — только для разработчика, UI его не использует
+    func testFetchStationsList(limitToOneCountry: Bool = false) {
         Task {
             do {
-                print("Fetching stations list...")
-                let resp = try await getStationsList()
-
-                if let countries = resp.countries {
-                    print("Countries: \(countries.count)")
-
-                    if limitToOneCountry, let first = countries.first {
-                        print("First country title: \(first.title ?? "nil")")
+                let res = try await getStationsList()
+                if limitToOneCountry {
+                    if let first = res.countries?.first {
+                        print("StationsList first country: \(first.title ?? "nil")")
+                    } else {
+                        print("StationsList has no countries")
                     }
                 } else {
-                    print("No countries returned")
+                    print("StationsList loaded: \(res)")
                 }
             } catch {
-                print("Error: \(error)")
+                print("StationsList error: \(error)")
             }
         }
     }
