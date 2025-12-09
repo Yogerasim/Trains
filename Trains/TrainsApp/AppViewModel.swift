@@ -1,25 +1,70 @@
+import Foundation
 import Combine
 
 final class AppViewModel: ObservableObject {
+    private let services = ServicesControl.shared
+    private var cancellables = Set<AnyCancellable>()
+
+    private let client = APIConfig.client
+    private let apikey = APIConfig.apiKey
+
     init() {
-        guard APIConfig.runTests else {
-            print("Tests disabled")
-            return
+        if services.runTests {
+            runTests()
         }
-        runTests()
+
+        services.$runTests
+            .sink { [weak self] run in
+                if run {
+                    self?.runTests()
+                } else {
+                    print("Tests disabled")
+                }
+            }
+            .store(in: &cancellables)
     }
 
     private func runTests() {
-        let client = APIConfig.client
-        let apikey = APIConfig.apiKey
+        print("Running enabled API tests...")
 
-        NearestStationsService(client: client, apikey: apikey).testFetchStations()
-        ScheduleOnStationService(client: client, apikey: apikey).testFetchSchedule()
-        ThreadService(client: client, apikey: apikey).testFetchThread(station: "s9602494")
-        RidesBetweenStationsService(client: client, apikey: apikey).testFetchRides()
-        NearestSettlementService(client: client, apikey: apikey).testFetchNearestSettlement()
-        CarrierInfoService().testFetchCarrier(code: "TK")
-        StationsListService(client: client, apikey: apikey).testFetchStationsList(limitToOneCountry: true)
-        CopyrightService(client: client, apikey: apikey).testFetchCopyright()
+        if services.stationsList {
+            StationsListService(client: client, apikey: apikey)
+                .testFetchStationsList(limitToOneCountry: true)
+        }
+        
+        if services.nearestStations {
+            NearestStationsService(client: client, apikey: apikey)
+                .testFetchStations()
+        }
+
+        if services.scheduleOnStation {
+            ScheduleOnStationService(client: client, apikey: apikey)
+                .testFetchSchedule()
+        }
+
+        if services.threadService {
+            ThreadService(client: client, apikey: apikey)
+                .testFetchThread(station: "s9602494")
+        }
+
+        if services.ridesBetweenStations {
+            RidesBetweenStationsService(client: client, apikey: apikey)
+                .testFetchRides()
+        }
+
+        if services.nearestSettlement {
+            NearestSettlementService(client: client, apikey: apikey)
+                .testFetchNearestSettlement()
+        }
+
+        if services.carrierInfo {
+            CarrierInfoService()
+                .testFetchCarrier(code: "TK")
+        }
+
+        if services.copyright {
+            CopyrightService(client: client, apikey: apikey)
+                .testFetchCopyright()
+        }
     }
 }

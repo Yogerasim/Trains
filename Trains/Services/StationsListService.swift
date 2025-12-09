@@ -27,7 +27,6 @@ final class StationsListService {
         return try response.ok.body.json
     }
 
-    // Тестовый метод — только для разработчика, UI его не использует
     func testFetchStationsList(limitToOneCountry: Bool = false) {
         Task {
             do {

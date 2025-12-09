@@ -12,7 +12,7 @@ final class CarrierInfoService: CarrierInfoServiceProtocol {
     private let client: Client
     private let apikey: String
 
-    init(client: Client = ApiConfig.client, apikey: String = ApiConfig.apiKey) {
+    init(client: Client = APIConfig.client, apikey: String = APIConfig.apiKey) {
         self.client = client
         self.apikey = apikey
     }
