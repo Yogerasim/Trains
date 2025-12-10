@@ -46,7 +46,6 @@ extension StationsListService {
         do {
             let data = try await getAllStations()
 
-            // Печатаем все города
             if let countries = data.countries,
                let russia = countries.first(where: { $0.title == "Россия" }),
                let regions = russia.regions {
