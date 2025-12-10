@@ -24,23 +24,3 @@ final class CopyrightService: CopyrightServiceProtocol {
     }
 }
 
-func testFetchCopyright(){
-    Task {
-        do {
-            let client = Client(
-                serverURL: try Servers.Server1.url(),
-                transport: URLSessionTransport()
-            )
-            let service = CopyrightService(
-                client: client,
-                apikey: "YOUR_API_KEY"
-            )
-            print("Fetching Copyright...")
-            let copyright = try await service.getCopyright(
-            )
-            print("Successfully fetched copyright: \(copyright)")
-        } catch {
-            print("Error fetching copyright: \(error)")
-        }
-    }
-}

@@ -30,41 +30,8 @@ final class ThreadService: ThreadServiceProtocol {
     }
 }
 
-// Простой тестовый вызов API
-func testFetchThread() {
-    Task {
-        do {
-            // 1. Создаём клиент
-            let client = Client(
-                serverURL: try Servers.Server1.url(),
-                transport: URLSessionTransport()
-            )
-            
-            // 2. Создаём сервис
-            let service = ThreadService(
-                client: client,
-                apikey: "ВАШ_КЛЮЧ" // Замените на свой API-ключ
-            )
-            
-            // 3. Вызываем метод и получаем нитку
-            print("Fetching thread...")
-            let thread = try await service.getRouteStations(
-                uid: "0000000000", // Пример UID рейса
-                date: "2025-12-10" // Пример даты
-            )
-            
-            // 4. Печатаем результат
-            print("Successfully fetched thread: \(thread)")
-            
-            // 5. Дополнительно: выводим первую дату прибытия
-            if let arrival = thread.stops?.first?.arrival {
-                print("Дата прибытия первой остановки: \(arrival)")
-            }
-        } catch {
-            print("Error fetching thread: \(error)")
-        }
-    }
-}
+
+
 extension ThreadService {
     /// Асинхронный метод для отладки — печатает данные рейса в консоль
     func debugPrintRoute(uid: String, date: String? = nil) async {

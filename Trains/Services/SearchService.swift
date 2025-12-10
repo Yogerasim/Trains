@@ -28,36 +28,3 @@ final class SearchService: SearchServiceProtocol {
     }
 }
 
-func testFetchSearch() {
-    Task {
-        do {
-            let client = Client(
-                serverURL: try Servers.Server1.url(),
-                transport: URLSessionTransport()
-            )
-            
-            let service = SearchService(
-                client: client,
-                apikey: "YOUR_API_KEY"
-            )
-            print("Fetching Schedule Between Stations...")
-            let scheduleResult = try await service.getScheduleBetweenStations(
-                from: "c146",
-                to: "c213",
-                date: "2025-11-01"
-            )
-            let encoder = JSONEncoder()
-            encoder.outputFormatting = .prettyPrinted
-            var jsonString: String?
-            if let jsonData = try? encoder.encode(scheduleResult),
-               let dataString = String(data: jsonData, encoding: .utf8) {
-                jsonString = dataString
-                print("Successfully fetched schedule:\n\(jsonString!)")
-            } else {
-                print("Successfully fetched schedule (debug description): \(scheduleResult)")
-            }
-        } catch {
-            print("Error fetching schedule: \(error)")
-        }
-    }
-}
