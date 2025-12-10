@@ -31,10 +31,12 @@ final class AppViewModel: ObservableObject {
     /// Запуск тестов включённых сервисов
     private func runTests() {
         print("Running enabled API tests...")
-        
+
         if services.stationsList {
-            let stationsService = StationsListService(client: client, apiKey: apiKey)
-            stationsService.testFetchStationsList(limitToOneCountry: true)
+            let s = StationsListService(client: client, apiKey: apiKey)
+            Task {
+                await s.debugPrintAllStations()
+            }
         }
     }
 }

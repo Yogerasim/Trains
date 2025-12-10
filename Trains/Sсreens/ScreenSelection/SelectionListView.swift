@@ -16,10 +16,12 @@ struct SelectionListView: View {
 
     var body: some View {
         VStack(spacing: 0) {
+
             NavigationTitleView(title: title) {
                 dismiss()
             }
 
+            // Поиск
             HStack(spacing: 8) {
                 Image(systemName: "magnifyingglass")
                     .foregroundStyle(.gray)
@@ -41,6 +43,7 @@ struct SelectionListView: View {
             .padding(.horizontal, 16)
             .padding(.top, 12)
 
+            // Список
             ScrollView {
                 LazyVStack(spacing: 0) {
                     ForEach(filteredItems, id: \.self) { item in
@@ -49,14 +52,14 @@ struct SelectionListView: View {
                 }
                 .padding(.top, 8)
             }
+            .frame(maxHeight: .infinity)   // <<<<<<<<<< ОБЯЗАТЕЛЬНО
             .opacity(filteredItems.isEmpty ? 0 : 1)
             .animation(.easeInOut, value: filteredItems.isEmpty)
 
+            // Плейсхолдер без Spacer
             PlaceholderView(type: .noData)
                 .opacity(filteredItems.isEmpty ? 1 : 0)
                 .animation(.easeInOut, value: filteredItems.isEmpty)
-
-            Spacer()
         }
         .background(DesignSystem.Colors.background)
         .ignoresSafeArea(.keyboard)

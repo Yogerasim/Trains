@@ -2,10 +2,10 @@ import Foundation
 import OpenAPIRuntime
 import OpenAPIURLSession
 
-typealias AllStationsResponseType = Components.Schemas.AllStationsResponse
+typealias AllStations = Components.Schemas.AllStationsResponse
 
 protocol StationsListServiceProtocol {
-    func getAllStations(lang: String?) async throws -> AllStationsResponseType
+    func getAllStations(lang: String?) async throws -> AllStations
 }
 
 final class StationsListService: StationsListServiceProtocol {
@@ -17,7 +17,7 @@ final class StationsListService: StationsListServiceProtocol {
         self.apiKey = apiKey
     }
 
-    func getAllStations(lang: String? = "ru_RU") async throws -> AllStationsResponseType {
+    func getAllStations(lang: String? = "ru_RU") async throws -> AllStations {
         var urlComponents = URLComponents(string: "https://api.rasp.yandex-net.ru/v3.0/stations_list/")!
         var queryItems: [URLQueryItem] = [
             URLQueryItem(name: "apikey", value: apiKey)
@@ -28,58 +28,55 @@ final class StationsListService: StationsListServiceProtocol {
         urlComponents.queryItems = queryItems
 
         let request = URLRequest(url: urlComponents.url!)
-        
-        // Используем OpenAPIURLSession для запроса
         let (data, response) = try await URLSession.shared.data(for: request)
-        
+
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
             throw URLError(.badServerResponse)
         }
 
         let decoder = JSONDecoder()
-        return try decoder.decode(AllStationsResponseType.self, from: data)
+        return try decoder.decode(AllStations.self, from: data)
     }
 }
 
+
+struct City: Identifiable, Hashable {
+    let id = UUID()
+    let name: String
+    let stations: [String]
+}
 extension StationsListService {
+    func debugPrintAllStations() async {
+        print("=== DEBUG STATIONS START ===")
 
-    /// Тестирование получения списка станций
-    /// - Parameter limitToOneCountry: если true, выводится только первая страна для ускорения теста
-    func testFetchStationsList(limitToOneCountry: Bool = false) {
-        Task {
-            do {
-                let response = try await getAllStations()
-                
-                // Разворачиваем опциональный массив стран
-                guard let countries = response.countries, !countries.isEmpty else {
-                    print("❌ Нет стран в ответе")
-                    return
-                }
+        do {
+            let data = try await getAllStations()
 
-                let firstCountry = countries[0]
-                print("✅ Получена страна: \(firstCountry.title)")
+            // Печатаем все города
+            if let countries = data.countries,
+               let russia = countries.first(where: { $0.title == "Россия" }),
+               let regions = russia.regions {
 
-                if limitToOneCountry {
-                    if let firstRegion = firstCountry.regions?.first {
-                        print("  Регион: \(firstRegion.title)")
+                var allCities: [String] = []
 
-                        if let firstSettlement = firstRegion.settlements?.first {
-                            print("    Населённый пункт: \(firstSettlement.title)")
-
-                            if let firstStation = firstSettlement.stations?.first {
-                                print("      Станция: \(firstStation.title) (\(firstStation.station_type ?? "тип неизвестен"))")
-                            }
-                        }
+                for region in regions {
+                    for settlement in region.settlements ?? [] {
+                        allCities.append(settlement.title ?? "")
                     }
-                    return
                 }
 
-                // Если limitToOneCountry == false, выводим количество стран
-                print("✅ Всего стран: \(countries.count)")
-
-            } catch {
-                print("❌ Ошибка при тесте StationsListService: \(error)")
+                let sorted = allCities.sorted()
+                print("Всего населённых пунктов: \(sorted.count)")
+                print("Первые 30 городов в алфавите:")
+                sorted.prefix(30).forEach { print(" - \($0)") }
+                print("Последние 30 городов в алфавите:")
+                sorted.suffix(30).forEach { print(" - \($0)") }
             }
+
+        } catch {
+            print("❌ Ошибка debugPrintAllStations: \(error)")
         }
+
+        print("=== DEBUG STATIONS END ===")
     }
 }

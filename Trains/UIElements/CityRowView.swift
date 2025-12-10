@@ -23,7 +23,7 @@ struct CityRowView: View {
                     .foregroundStyle(DesignSystem.Colors.textPrimary)
                     .padding(.trailing, 16)
             }
-            .frame(width: 375, height: 60)
+            .frame(height: 60) // ❗️убрали width: 375
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
