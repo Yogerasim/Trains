@@ -20,7 +20,6 @@ final class RussianCitiesService {
 
         var result: [City] = []
 
-        // Все допустимые типы ЖД-станций
         let validTypes: Set<String> = [
             "train",
             "train_station",
@@ -37,7 +36,6 @@ final class RussianCitiesService {
             for settlement in settlements {
                 guard let stations = settlement.stations else { continue }
 
-                // Фильтруем по типу
                 let trainStations = stations
                     .filter { station in
                         guard let type = station.station_type else { return false }
@@ -55,35 +53,7 @@ final class RussianCitiesService {
         }
 
         let sorted = result.sorted { $0.name < $1.name }
-        print("🔥 Loaded Russian cities with stations: \(sorted.count)")
+        print("Loaded Russian cities with stations: \(sorted.count)")
         return sorted
-    }
-}
-extension StationsListService {
-    
-    func testRussianCitiesGrouped(allStations: AllStations) {
-        let service = RussianCitiesService()
-        let cities = service.getRussianCities(from: allStations)
-        
-        // Группируем города по первой букве
-        let grouped = Dictionary(grouping: cities) { city in
-            city.name.first?.uppercased() ?? "#"
-        }
-        
-        // Сортируем по алфавиту
-        let sortedKeys = grouped.keys.sorted()
-        
-        for key in sortedKeys {
-            print("=== \(key) ===")
-            let citiesForKey = grouped[key]!.sorted { $0.name < $1.name }
-            for city in citiesForKey.prefix(10) { // первые 10 городов для каждой буквы
-                print("Город: \(city.name), станции: \(city.stations.count)")
-            }
-            if citiesForKey.count > 10 {
-                print("... ещё \(citiesForKey.count - 10) городов")
-            }
-        }
-        
-        print("✅ Всего российских городов с ж/д станциями: \(cities.count)")
     }
 }

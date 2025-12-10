@@ -27,35 +27,3 @@ final class ScheduleService: ScheduleServiceProtocol {
     }
 }
 
-func testFetchStationScheduleSearch() {
-    Task {
-        do {
-            let client = Client(
-                serverURL: try Servers.Server1.url(),
-                transport: URLSessionTransport()
-            )
-            
-            let service = ScheduleService(
-                client: client,
-                apikey: "YOUR_API_KEY"
-            )
-            print("Fetching Schedule...")
-            let schedule = try await service.getStationSchedule(
-                station: "s9600213",
-                date: "2025-11-01"
-            )
-            let encoder = JSONEncoder()
-            encoder.outputFormatting = .prettyPrinted
-            var jsonString: String?
-            if let jsonData = try? encoder.encode(schedule),
-               let dataString = String(data: jsonData, encoding: .utf8) {
-                jsonString = dataString
-                print("Successfully fetched schedule:\n\(jsonString!)")
-            } else {
-                print("Successfully fetched schedule (debug description): \(schedule)")
-            }
-        } catch {
-            print("Error fetching schedule: \(error)")
-        }
-    }
-}

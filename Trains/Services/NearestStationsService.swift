@@ -27,27 +27,3 @@ final class NearestStationsService: NearestStationsServiceProtocol {
     }
 }
 
-func testFetchStations() {
-    Task {
-        do {
-            let client = Client(
-                serverURL: try Servers.Server1.url(),
-                transport: URLSessionTransport()
-            )
-            
-            let service = NearestStationsService(
-                client: client,
-                apikey: "YOUR_API_KEY"
-            )
-            print("Fetching stations...")
-            let stations = try await service.getNearestStations(
-                lat: 59.864177,
-                lng: 30.319163,
-                distance: 50
-            )
-            print("Successfully fetched stations: \(stations)")
-        } catch {
-            print("Error fetching stations: \(error)")
-        }
-    }
-}
