@@ -3,33 +3,38 @@ import Foundation
 import OpenAPIRuntime
 import OpenAPIURLSession
 
-typealias StationsListResponse = Components.Schemas.StationsListResponse
+
 
 @MainActor
 final class CitySelectionViewModel: ObservableObject {
 
     @Published var cities: [City] = []
+    @Published var isLoading = false
     @Published var showNoInternet = false
     @Published var showServerError = false
 
-    private let api = StationsListService()
+    private let api = StationsListService() // сервис по OpenAPI
 
+    /// Загружает города и станции
     func load() async {
+        isLoading = true
+        showNoInternet = false
+        showServerError = false
+
         do {
-            let data = try await api.getStationsList()
-
-            dump(data)
-            let citiesList = data.toCities()
-            dump(citiesList)
-
+            let response = try await api.getAllStations()
+            let citiesList = response.toCities()
             cities = citiesList
         } catch {
             handleError(error)
         }
+
+        isLoading = false
     }
 
+    /// Обработка ошибок сети и сервера
     private func handleError(_ error: Error) {
-        if (error as NSError).code == -1009 {
+        if let urlError = error as? URLError, urlError.code == .notConnectedToInternet {
             showNoInternet = true
         } else {
             showServerError = true
@@ -37,13 +42,17 @@ final class CitySelectionViewModel: ObservableObject {
     }
 }
 
+// MARK: - Модель города
+
 struct City: Identifiable, Hashable {
     let id = UUID()
     let name: String
     let stations: [String]
 }
 
-extension StationsListResponse {
+// MARK: - Преобразование ответа API в [City]
+
+extension AllStationsResponseType {
     func toCities() -> [City] {
         guard let countries = countries else {
             print("❌ No countries in response")
