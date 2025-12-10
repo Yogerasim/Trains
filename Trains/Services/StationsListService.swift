@@ -39,12 +39,6 @@ final class StationsListService: StationsListServiceProtocol {
     }
 }
 
-
-struct City: Identifiable, Hashable {
-    let id = UUID()
-    let name: String
-    let stations: [String]
-}
 extension StationsListService {
     func debugPrintAllStations() async {
         print("=== DEBUG STATIONS START ===")

@@ -17,3 +17,14 @@ struct StationData: Identifiable {
     let middleBottomText: String
     let rightBottomText: String
 }
+struct Station: Identifiable, Hashable {
+    let id = UUID()
+    let name: String
+    let city: String
+}
+
+struct City: Identifiable, Hashable {
+    let id = UUID()
+    let name: String
+    let stations: [String]
+}

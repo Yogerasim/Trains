@@ -9,7 +9,7 @@ struct SettingToggleRow: View {
             Text(title)
                 .font(DesignSystem.Fonts.regular17)
                 .foregroundStyle(DesignSystem.Colors.textPrimary)
-                .padding(.leading, 16)
+                .padding(.leading, 0)
 
             Spacer()
 
