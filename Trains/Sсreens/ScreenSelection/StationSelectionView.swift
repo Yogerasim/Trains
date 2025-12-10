@@ -14,7 +14,7 @@ struct StationSelectionView: View {
         NavigationStack {
             SelectionListView(
                 title: "Выбор вокзала",
-                items: vm.stations,
+                items: vm.stations, isLoading: false,
                 onSelect: onSelect
             )
             .navigationBarBackButtonHidden(true)
@@ -22,11 +22,3 @@ struct StationSelectionView: View {
     }
 }
 
-#Preview {
-    StationSelectionView(
-        city: City(
-            name: "Москва",
-            stations: ["Казанский вокзал", "Ярославский вокзал"]
-        )
-    )
-}

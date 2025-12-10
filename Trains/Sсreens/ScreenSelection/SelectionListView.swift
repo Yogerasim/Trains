@@ -5,6 +5,7 @@ struct SelectionListView: View {
 
     let title: String
     let items: [String]
+    let isLoading: Bool
     var onSelect: (String) -> Void = { _ in }
 
     @State private var searchText = ""
@@ -16,12 +17,10 @@ struct SelectionListView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-
             NavigationTitleView(title: title) {
                 dismiss()
             }
 
-            // Поиск
             HStack(spacing: 8) {
                 Image(systemName: "magnifyingglass")
                     .foregroundStyle(.gray)
@@ -43,25 +42,32 @@ struct SelectionListView: View {
             .padding(.horizontal, 16)
             .padding(.top, 12)
 
-            // Список
             ScrollView {
                 LazyVStack(spacing: 0) {
+                    if isLoading {
+                        ProgressView()
+                            .controlSize(.large)
+                            .tint(.gray)
+                            .padding(.vertical, 150)
+                    }
+
                     ForEach(filteredItems, id: \.self) { item in
-                        CityRowView(city: item) { onSelect(item) }
+                        CityRowView(city: item) {
+                            onSelect(item)
+                        }
+                    }
+                    
+                    if !isLoading && filteredItems.isEmpty {
+                        PlaceholderView(type: .noData)
+                            .padding(.top, 50)
                     }
                 }
                 .padding(.top, 8)
             }
-            .frame(maxHeight: .infinity)   // <<<<<<<<<< ОБЯЗАТЕЛЬНО
-            .opacity(filteredItems.isEmpty ? 0 : 1)
-            .animation(.easeInOut, value: filteredItems.isEmpty)
-
-            // Плейсхолдер без Spacer
-            PlaceholderView(type: .noData)
-                .opacity(filteredItems.isEmpty ? 1 : 0)
-                .animation(.easeInOut, value: filteredItems.isEmpty)
+            .frame(maxHeight: .infinity)
         }
         .background(DesignSystem.Colors.background)
         .ignoresSafeArea(.keyboard)
     }
 }
+

@@ -16,20 +16,23 @@ final class CitySelectionViewModel: ObservableObject {
         isLoading = true
         showNoInternet = false
         showServerError = false
+        defer { isLoading = false }
 
         do {
             // 1️⃣ Получаем все станции
             let allStations = try await stationsService.getAllStations()
-            
+
             // 2️⃣ Фильтруем только российские города
             let citiesList = russianService.getRussianCities(from: allStations)
+
             cities = citiesList
+
         } catch {
             handleError(error)
         }
+
         print("🔥 Cities loaded into ViewModel: \(cities.count)")
         cities.prefix(20).forEach { print(" - \($0.name)") }
-        isLoading = false
     }
 
     private func handleError(_ error: Error) {
