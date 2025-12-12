@@ -11,9 +11,18 @@ final class CitySelectionViewModel: ObservableObject {
 
     private let stationsService = StationsListService()
     private let russianService = RussianCitiesService()
+    private let cacheKey = "cachedCities"
+
+    init() {
+        // загружаем из кэша сразу, если есть
+        if let cached = loadCitiesFromCache() {
+            self.cities = cached
+        }
+    }
 
     func load() async {
-        isLoading = true
+        // Лоадер включаем только если список пустой
+        if cities.isEmpty { isLoading = true }
         showNoInternet = false
         showServerError = false
         defer { isLoading = false }
@@ -21,7 +30,8 @@ final class CitySelectionViewModel: ObservableObject {
         do {
             let allStations = try await stationsService.getAllStations()
             let citiesList = russianService.getRussianCities(from: allStations)
-            cities = citiesList
+            self.cities = citiesList
+            saveCitiesToCache(citiesList)
         } catch {
             if let urlError = error as? URLError, urlError.code == .notConnectedToInternet {
                 showNoInternet = true
@@ -29,5 +39,16 @@ final class CitySelectionViewModel: ObservableObject {
                 showServerError = true
             }
         }
+    }
+
+    private func saveCitiesToCache(_ cities: [City]) {
+        if let data = try? JSONEncoder().encode(cities) {
+            UserDefaults.standard.set(data, forKey: cacheKey)
+        }
+    }
+
+    private func loadCitiesFromCache() -> [City]? {
+        guard let data = UserDefaults.standard.data(forKey: cacheKey) else { return nil }
+        return try? JSONDecoder().decode([City].self, from: data)
     }
 }

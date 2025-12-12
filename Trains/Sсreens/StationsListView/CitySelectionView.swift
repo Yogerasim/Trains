@@ -3,7 +3,7 @@ import SwiftUI
 struct CitySelectionView: View {
 
     @StateObject private var vm = CitySelectionViewModel()
-    var onSelect: (City, StationInfo) -> Void  // возвращаем город + станцию
+    var onSelect: (City, StationInfo) -> Void
 
     @State private var selectedCity: City?
     @State private var showStationSelection = false
@@ -11,10 +11,11 @@ struct CitySelectionView: View {
     var body: some View {
         NavigationStack {
             ZStack {
+                // Если есть города — сразу показываем список, не показываем лоадер
                 SelectionListView(
                     title: "Выбор города",
                     items: vm.cities.map { $0.name },
-                    isLoading: vm.isLoading
+                    isLoading: vm.cities.isEmpty && vm.isLoading
                 ) { cityName in
                     if let city = vm.cities.first(where: { $0.name == cityName }) {
                         selectedCity = city

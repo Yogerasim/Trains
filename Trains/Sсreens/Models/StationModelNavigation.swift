@@ -31,13 +31,13 @@ struct Station: Identifiable, Hashable {
     let city: String
 }
 
-struct City: Identifiable, Hashable {
-    let id = UUID()
+struct City: Identifiable, Hashable, Codable{
+    var id = UUID()
     let name: String
     let stations: [StationInfo]
 }
 
-struct StationInfo: Hashable {
+struct StationInfo: Hashable, Codable{
     let title: String
     let code: String
 }
