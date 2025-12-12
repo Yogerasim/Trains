@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ChoosingDirectionView: View {
+    // model должен быть StateObject, т.к. ChoosingDirectionViewModel — класс ObservableObject
     @StateObject private var model = ChoosingDirectionViewModel()
     @StateObject private var viewModel = AppViewModel()
 
@@ -23,26 +24,36 @@ struct ChoosingDirectionView: View {
                 currentStoryID: nil
             )
             .padding(.top, 16)
+
             Spacer().frame(height: 12)
+
             content
                 .padding(.horizontal, 16)
+
             Spacer()
         }
-        .fullScreenCover(item: $model.navigation) { nav in
+        .fullScreenCover(item: $model.navigation) { (nav: ChoosingDirectionNavigation) in
             switch nav {
             case .cityFrom:
                 CitySelectionView { city, station in
                     model.selectFrom(city: city, station: station)
                 }
+
             case .cityTo:
                 CitySelectionView { city, station in
                     model.selectTo(city: city, station: station)
                 }
+
             case .stations:
                 StationsScreenView(
+                    fromStationCode: model.fromStation?.code ?? "",
+                    toStationCode: model.toStation?.code ?? "",
                     headerText: "\(model.fromTitle) → \(model.toTitle)",
-                    stations: MockData.stationCards,
-                    onBack: { model.navigation = nil }
+                    onBack: { model.navigation = nil },
+                    searchService: SearchService(
+                        client: APIConfig.makeClient(),
+                        apikey: APIConfig.apiKey
+                    )
                 )
             }
         }
@@ -128,7 +139,7 @@ private struct DirectionOptionButton: View {
         HStack {
             Text(title)
                 .font(.system(size: 17, weight: .medium))
-                .foregroundColor(isPlaceholder ? .gray : .black) // явный цвет текста
+                .foregroundStyle(isPlaceholder ? .gray : .black)
 
             Spacer()
         }
@@ -136,4 +147,8 @@ private struct DirectionOptionButton: View {
         .padding(.horizontal, 16)
         .contentShape(Rectangle())
     }
+}
+
+#Preview {
+    MainTabView()
 }

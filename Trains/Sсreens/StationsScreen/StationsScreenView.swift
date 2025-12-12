@@ -2,15 +2,23 @@ import SwiftUI
 
 struct StationsScreenView: View {
     let headerText: String
-    let stations: [StationData]
     var onBack: () -> Void
+
+    @StateObject private var vm: StationsScreenViewModel
 
     @State private var path = NavigationPath()
     @State private var hasActiveFilters = false
     @State private var filteredStations: [StationData] = []
 
-    @State private var showNoInternet = false
-    @State private var showServerError = false
+    init(fromStationCode: String, toStationCode: String, headerText: String, onBack: @escaping () -> Void, searchService: SearchService) {
+        _vm = StateObject(wrappedValue: StationsScreenViewModel(
+            fromStationCode: fromStationCode,
+            toStationCode: toStationCode,
+            searchService: searchService
+        ))
+        self.headerText = headerText
+        self.onBack = onBack
+    }
 
     var body: some View {
         ZStack {
@@ -21,7 +29,7 @@ struct StationsScreenView: View {
                             path: $path,
                             hasActiveFilters: $hasActiveFilters,
                             filteredStations: $filteredStations,
-                            allStations: stations
+                            allStations: vm.stations
                         )
                     }
                     .navigationDestination(for: InfoNav.self) { info in
@@ -33,29 +41,26 @@ struct StationsScreenView: View {
                     }
                     .navigationBarBackButtonHidden(true)
             }
-            .onAppear { filteredStations = stations }
+            .onAppear {
+                filteredStations = vm.stations
+                Task {
+                    await vm.load()
+                }
+            }
 
-            if showNoInternet {
-                ZStack {
-                    Color.white.ignoresSafeArea()
-                    PlaceholderView(type: .noInternet)
-                }
-                .zIndex(10)
-            } else if showServerError {
-                ZStack {
-                    Color.white.ignoresSafeArea()
-                    PlaceholderView(type: .serverError)
-                }
-                .zIndex(10)
+            if vm.showNoInternet {
+                PlaceholderView(type: .noInternet)
+                    .zIndex(10)
+            } else if vm.showServerError {
+                PlaceholderView(type: .serverError)
+                    .zIndex(10)
             }
         }
     }
 
     private var content: some View {
         VStack(spacing: 30) {
-            NavigationTitleView(title: "") {
-                onBack()
-            }
+            NavigationTitleView(title: "") { onBack() }
 
             Text(headerText)
                 .font(DesignSystem.Fonts.bold24)
@@ -63,7 +68,11 @@ struct StationsScreenView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 26)
 
-            if filteredStations.isEmpty {
+            if vm.stations.isEmpty && vm.isLoading {
+                ProgressView()
+                    .frame(maxWidth: .infinity)
+                Spacer()
+            } else if filteredStations.isEmpty {
                 PlaceholderView(type: .emptyMessage)
                     .frame(maxWidth: .infinity)
                 Spacer()
@@ -80,15 +89,6 @@ struct StationsScreenView: View {
                                 middleBottomText: station.middleBottomText,
                                 rightBottomText: station.rightBottomText
                             )
-                            .onTapGesture {
-                                path.append(
-                                    InfoNav(
-                                        carrierName: "ОАО «РЖД»",
-                                        imageName: "Image",
-                                        info: MockData.infoItems
-                                    )
-                                )
-                            }
                         }
                     }
                     .padding(.horizontal, 16)
@@ -142,31 +142,4 @@ struct FilterScreenViewWrapper: View {
     }
 }
 
-#Preview {
-    let sampleStations = [
-        StationData(
-            logoName: "RZHD",
-            stationName: "РЖД",
-            subtitle: "С пересадкой в Костроме",
-            rightTopText: "16 января",
-            leftBottomText: "22:30",
-            middleBottomText: "9 часов",
-            rightBottomText: "22:30"
-        ),
-        StationData(
-            logoName: "FGK",
-            stationName: "ФГК",
-            subtitle: nil,
-            rightTopText: "16 января",
-            leftBottomText: "00:10",
-            middleBottomText: "8 часов",
-            rightBottomText: "08:10"
-        ),
-    ]
 
-    StationsScreenView(
-        headerText: "Москва (Ярославский вокзал) → Санкт-Петербург (Балтийский вокзал)",
-        stations: sampleStations,
-        onBack: {}
-    )
-}

@@ -44,13 +44,21 @@ final class StationsScheduleViewModel: ObservableObject {
     // MARK: - Convert Segments → StationData
     private func convert(_ data: Segments) -> [StationData] {
         data.segments?.compactMap { seg in
-            StationData(
+            
+            let durationText: String
+            if let dur = seg.duration {
+                durationText = formatDuration(Int(dur))
+            } else {
+                durationText = ""
+            }
+
+            return StationData(
                 logoName: seg.thread?.carrier?.logo ?? "DefaultLogo",
                 stationName: seg.thread?.carrier?.title ?? "Без названия",
                 subtitle: seg.thread?.title,
                 rightTopText: format(seg.departure),
                 leftBottomText: format(seg.departure),
-                middleBottomText: formatDuration(seg.duration),
+                middleBottomText: durationText,
                 rightBottomText: format(seg.arrival)
             )
         } ?? []
