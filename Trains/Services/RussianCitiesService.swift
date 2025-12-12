@@ -1,21 +1,53 @@
-import OpenAPIRuntime
 import Foundation
+import OpenAPIRuntime
 import OpenAPIURLSession
 
+// MARK: - ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
 
-// Протокол сервиса
-protocol RussianCitiesServiceProtocol {
-    /// Фильтрует все города и возвращает только российские с железнодорожными станциями
-    func getRussianCities(from allStations: AllStations) -> [City]
+/// Извлекает строку из значения Any, поддерживает Optional
+private func unwrapAnyToString(_ any: Any) -> String? {
+    let mirror = Mirror(reflecting: any)
+    if mirror.displayStyle == .optional {
+        if let first = mirror.children.first {
+            return unwrapAnyToString(first.value)
+        }
+        return nil
+    }
+    return any as? String
 }
 
-// Конкретная реализация
+/// Ищет в codes любое поле, где имя содержит "yandex"
+private func extractYandexCode(from codes: Any) -> String? {
+    let mirror = Mirror(reflecting: codes)
+
+    // 1. Ищем поля с названием, похожим на yandex
+    for child in mirror.children {
+        guard let label = child.label?.lowercased() else { continue }
+
+        if label.contains("yandex") || label.contains("yandex_code") || label.contains("yandexcode") {
+            if let value = unwrapAnyToString(child.value) {
+                return value
+            }
+        }
+    }
+
+    // 2. Фолбэк: первая строка
+    for child in mirror.children {
+        if let value = unwrapAnyToString(child.value) {
+            return value
+        }
+    }
+
+    return nil
+}
+
+// MARK: - СЕРВИС
+
 final class RussianCitiesService {
+
     func getRussianCities(from allStations: AllStations) -> [City] {
         guard let countries = allStations.countries else { return [] }
-
         guard let russia = countries.first(where: { $0.title == "Россия" }) else { return [] }
-
         guard let regions = russia.regions else { return [] }
 
         var result: [City] = []
@@ -36,24 +68,32 @@ final class RussianCitiesService {
             for settlement in settlements {
                 guard let stations = settlement.stations else { continue }
 
-                let trainStations = stations
+                let stationInfos: [StationInfo] = stations
                     .filter { station in
                         guard let type = station.station_type else { return false }
                         return validTypes.contains(type)
                     }
-                    .compactMap { $0.title }
-                    .sorted()
+                    .compactMap { station in
+                        guard let title = station.title else { return nil }
 
-                guard !trainStations.isEmpty else { continue }
+                        var codeString: String? = nil
+                        if let codes = station.codes {
+                            codeString = extractYandexCode(from: codes)
+                        }
 
-                guard let cityName = settlement.title, !cityName.isEmpty else { continue }
+                        guard let code = codeString, !code.isEmpty else { return nil }
 
-                result.append(City(name: cityName, stations: trainStations))
+                        return StationInfo(title: title, code: code)
+                    }
+                    .sorted(by: { $0.title < $1.title })
+
+                guard !stationInfos.isEmpty else { continue }
+                guard let cityName = settlement.title else { continue }
+
+                result.append(City(name: cityName, stations: stationInfos))
             }
         }
 
-        let sorted = result.sorted { $0.name < $1.name }
-        print("Loaded Russian cities with stations: \(sorted.count)")
-        return sorted
+        return result.sorted { $0.name < $1.name }
     }
 }

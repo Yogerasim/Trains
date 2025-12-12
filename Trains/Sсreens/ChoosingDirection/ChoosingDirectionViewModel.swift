@@ -1,51 +1,42 @@
 import SwiftUI
+import Combine
 
-@Observable
-final class ChoosingDirectionViewModel {
-    var fromCity: String?
-    var toCity: String?
-    var fromStation: String?
-    var toStation: String?
+@MainActor
+final class ChoosingDirectionViewModel: ObservableObject {
+    @Published var fromCity: City?
+    @Published var toCity: City?
+    @Published var fromStation: StationInfo?
+    @Published var toStation: StationInfo?
 
-    var screenState: ScreenState = .content
-    var navigation: ChoosingDirectionNavigation?
+    @Published var screenState: ScreenState = .content
+    @Published var navigation: ChoosingDirectionNavigation?
 
     var fromTitle: String {
-        if let city = fromCity, let station = fromStation {
-            return "\(city) (\(station))"
+        if let c = fromCity, let s = fromStation {
+            return "\(c.name) (\(s.title))"
         }
-        return fromCity ?? "Откуда"
+        return fromCity?.name ?? "Откуда"
     }
 
     var toTitle: String {
-        if let city = toCity, let station = toStation {
-            return "\(city) (\(station))"
+        if let c = toCity, let s = toStation {
+            return "\(c.name) (\(s.title))"
         }
-        return toCity ?? "Куда"
+        return toCity?.name ?? "Куда"
     }
 
     var bothSelected: Bool {
-        fromCity != nil && toCity != nil
+        fromStation != nil && toStation != nil
     }
 
-    func selectCityFrom(_ city: String) {
+    func selectFrom(city: City, station: StationInfo) {
         fromCity = city
-        fromStation = nil
-        navigation = nil
-    }
-
-    func selectStationFrom(_ station: String) {
         fromStation = station
         navigation = nil
     }
 
-    func selectCityTo(_ city: String) {
+    func selectTo(city: City, station: StationInfo) {
         toCity = city
-        toStation = nil
-        navigation = nil
-    }
-
-    func selectStationTo(_ station: String) {
         toStation = station
         navigation = nil
     }
@@ -55,13 +46,7 @@ final class ChoosingDirectionViewModel {
     func openStations() { navigation = .stations }
 
     func swapDirections() {
-        let tempCity = fromCity
-        let tempStation = fromStation
-
-        fromCity = toCity
-        fromStation = toStation
-
-        toCity = tempCity
-        toStation = tempStation
+        swap(&fromCity, &toCity)
+        swap(&fromStation, &toStation)
     }
 }

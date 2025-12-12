@@ -1,26 +1,27 @@
 import SwiftUI
 
 struct StationSelectionView: View {
-    @StateObject private var vm: StationSelectionViewModel
-    var onSelect: (String) -> Void = { _ in }
-    var cityName: String
 
-    init(city: City, onSelect: @escaping (String) -> Void = { _ in }) {
+    @StateObject private var vm: StationSelectionViewModel
+    var onSelect: (StationInfo) -> Void
+
+    init(city: City, onSelect: @escaping (StationInfo) -> Void) {
         _vm = StateObject(wrappedValue: StationSelectionViewModel(city: city))
         self.onSelect = onSelect
-        self.cityName = city.name
     }
 
     var body: some View {
-        NavigationStack {
+        VStack {
             SelectionListView(
-                title: "Выбор вокзала",
-                items: vm.stations, isLoading: false
-            ) { station in
-                onSelect("\(cityName) (\(station))")
+                title: "Выбор станции",
+                items: vm.stations.map { $0.title },
+                isLoading: false
+            ) { stationTitle in
+                if let station = vm.stations.first(where: { $0.title == stationTitle }) {
+                    onSelect(station)
+                }
             }
-            .navigationBarBackButtonHidden(true)
         }
+        .background(DesignSystem.Colors.background)
     }
 }
-

@@ -1,10 +1,17 @@
 import Foundation
 
 struct FilterNav: Hashable {}
+
 struct InfoNav: Hashable {
     let carrierName: String
     let imageName: String
     let info: [InfoItem]
+}
+
+struct InfoItem: Identifiable, Hashable {
+    let id = UUID()
+    let title: String
+    let subtitle: String
 }
 
 struct StationData: Identifiable {
@@ -17,6 +24,7 @@ struct StationData: Identifiable {
     let middleBottomText: String
     let rightBottomText: String
 }
+
 struct Station: Identifiable, Hashable {
     let id = UUID()
     let name: String
@@ -26,5 +34,10 @@ struct Station: Identifiable, Hashable {
 struct City: Identifiable, Hashable {
     let id = UUID()
     let name: String
-    let stations: [String]
+    let stations: [StationInfo]
+}
+
+struct StationInfo: Hashable {
+    let title: String
+    let code: String
 }

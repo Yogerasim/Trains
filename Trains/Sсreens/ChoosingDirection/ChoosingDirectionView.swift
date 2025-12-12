@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ChoosingDirectionView: View {
-    @State private var model = ChoosingDirectionViewModel()
+    @StateObject private var model = ChoosingDirectionViewModel()
     @StateObject private var viewModel = AppViewModel()
 
     @State private var showStories = false
@@ -26,18 +26,17 @@ struct ChoosingDirectionView: View {
             Spacer().frame(height: 12)
             content
                 .padding(.horizontal, 16)
-
             Spacer()
         }
         .fullScreenCover(item: $model.navigation) { nav in
             switch nav {
             case .cityFrom:
-                CitySelectionView { city in
-                    model.selectCityFrom(city)
+                CitySelectionView { city, station in
+                    model.selectFrom(city: city, station: station)
                 }
             case .cityTo:
-                CitySelectionView { city in
-                    model.selectCityTo(city)
+                CitySelectionView { city, station in
+                    model.selectTo(city: city, station: station)
                 }
             case .stations:
                 StationsScreenView(
@@ -129,7 +128,7 @@ private struct DirectionOptionButton: View {
         HStack {
             Text(title)
                 .font(.system(size: 17, weight: .medium))
-                .foregroundStyle(isPlaceholder ? .gray : .black)
+                .foregroundColor(isPlaceholder ? .gray : .black) // явный цвет текста
 
             Spacer()
         }
@@ -137,8 +136,4 @@ private struct DirectionOptionButton: View {
         .padding(.horizontal, 16)
         .contentShape(Rectangle())
     }
-}
-
-#Preview {
-    MainTabView()
 }
