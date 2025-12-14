@@ -21,6 +21,7 @@ enum MockData {
 
     static let stationCards: [StationData] = [
         StationData(
+            logoURL: nil,
             logoName: "RZHD",
             stationName: "РЖД",
             subtitle: "С пересадкой в Костроме",
@@ -30,6 +31,7 @@ enum MockData {
             rightBottomText: "22:30"
         ),
         StationData(
+            logoURL: nil,
             logoName: "FGK",
             stationName: "ФГК",
             subtitle: nil,

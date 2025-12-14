@@ -5,6 +5,7 @@ import OpenAPIURLSession
 
 @MainActor
 final class StationsScreenViewModel: ObservableObject {
+
     @Published var stations: [StationData] = []
     @Published var isLoading = false
     @Published var showNoInternet = false
@@ -14,7 +15,11 @@ final class StationsScreenViewModel: ObservableObject {
     private let fromStationCode: String
     private let toStationCode: String
 
-    init(fromStationCode: String, toStationCode: String, searchService: SearchServiceProtocol) {
+    init(
+        fromStationCode: String,
+        toStationCode: String,
+        searchService: SearchServiceProtocol
+    ) {
         self.fromStationCode = fromStationCode
         self.toStationCode = toStationCode
         self.searchService = searchService
@@ -35,48 +40,39 @@ final class StationsScreenViewModel: ObservableObject {
                 date: date
             )
 
-            print("✅ API returned response: \(response)")
-
-            var tmpStations: [StationData] = []
-
-            // Safety: убедимся что segments не nil
             guard let segments = response.segments, !segments.isEmpty else {
-                print("⚠️ response.segments is nil or empty")
-                // не считаем это обязательно server error — показываем empty placeholder
-                self.stations = []
+                stations = []
                 return
             }
 
-            for (idx, segment) in segments.enumerated() {
-                print("→ segment[\(idx)]: \(segment)")
+            var mapped: [StationData] = []
 
-                // маппим защищённо
+            for segment in segments {
+
                 let thread = segment.thread
                 let carrier = thread?.carrier
 
-                // departure / arrival — в твоём debug видно Date, так что форматируем
                 let depText = formatDateAny(segment.departure)
                 let arrText = formatDateAny(segment.arrival)
-
-                // duration может быть Int/Int32/Int64/String — обработаем
                 let durationText = formatAnyDuration(segment.duration)
 
-                // carrier code -> локальная картинка mapping (если надо)
-                let logoName: String = {
-                    if let code = carrier?.code {
-                        // carrier.code может быть Int или String — приводим в строку
-                        return String(describing: code)
+                let logoURL: URL? = {
+                    if let logo = carrier?.logo,
+                       let url = URL(string: logo),
+                       !logo.isEmpty {
+                        return url
                     }
-                    return "RZHD"
+                    return nil
                 }()
 
-                let subtitle = carrier?.title ?? thread?.title
+                let fallbackLogo = "RZHD"   // ⬅️ гарантированный asset
 
-                tmpStations.append(
+                mapped.append(
                     StationData(
-                        logoName: logoName,
+                        logoURL: logoURL,
+                        logoName: fallbackLogo,
                         stationName: thread?.title ?? "Неизвестно",
-                        subtitle: subtitle,
+                        subtitle: carrier?.title,
                         rightTopText: depText,
                         leftBottomText: arrText,
                         middleBottomText: durationText,
@@ -85,23 +81,20 @@ final class StationsScreenViewModel: ObservableObject {
                 )
             }
 
-            self.stations = tmpStations
-            print("🎯 Mapped stations count: \(tmpStations.count)")
+            stations = mapped
+            print("🎯 Mapped stations count: \(mapped.count)")
 
         } catch {
-            // подробный лог ошибки
             print("❌ StationsScreenViewModel.load() error: \(error)")
             if let urlError = error as? URLError, urlError.code == .notConnectedToInternet {
                 showNoInternet = true
-                print("→ Network: no internet")
             } else {
                 showServerError = true
-                print("→ Server error flag set")
             }
         }
     }
 
-    // ---------------- helpers ----------------
+    // MARK: - Helpers
 
     private lazy var timeFormatter: DateFormatter = {
         let f = DateFormatter()
@@ -111,10 +104,11 @@ final class StationsScreenViewModel: ObservableObject {
 
     private func formatDateAny(_ v: Any?) -> String {
         guard let v = v else { return "" }
-
         if let d = v as? Date { return timeFormatter.string(from: d) }
-        if let s = v as? String, let d = ISO8601DateFormatter().date(from: s) { return timeFormatter.string(from: d) }
-        // Fallback to debug description if unexpected type
+        if let s = v as? String,
+           let d = ISO8601DateFormatter().date(from: s) {
+            return timeFormatter.string(from: d)
+        }
         return String(describing: v)
     }
 
@@ -124,7 +118,6 @@ final class StationsScreenViewModel: ObservableObject {
         if let i32 = v as? Int32 { return formatDuration(Int(i32)) }
         if let i64 = v as? Int64 { return formatDuration(Int(i64)) }
         if let s = v as? String, let i = Int(s) { return formatDuration(i) }
-        // fallback
         return String(describing: v)
     }
 

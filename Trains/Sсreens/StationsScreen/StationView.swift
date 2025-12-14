@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct StationView: View {
+    let logoURL: URL?
     let logoName: String
     let stationName: String
     let subtitle: String?
@@ -12,11 +13,27 @@ struct StationView: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack(spacing: 8) {
-                Image(logoName)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 38, height: 38)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+
+                Group {
+                    if let url = logoURL {
+                        AsyncImage(url: url) { image in
+                            image
+                                .resizable()
+                                .scaledToFill()
+                        } placeholder: {
+                            Image(logoName)
+                                .resizable()
+                                .scaledToFill()
+                                .opacity(0.3)
+                        }
+                    } else {
+                        Image(logoName)
+                            .resizable()
+                            .scaledToFill()
+                    }
+                }
+                .frame(width: 38, height: 38)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
 
                 VStack(alignment: .leading, spacing: subtitle != nil ? 2 : 0) {
                     Text(stationName)
@@ -84,6 +101,7 @@ struct StationView: View {
 #Preview {
     VStack(spacing: 20) {
         StationView(
+            logoURL: URL(string: "https://avatars.mds.yandex.net/get-rasp/123"),
             logoName: "RZHD",
             stationName: "РЖД",
             subtitle: "С пересадкой в Костроме",

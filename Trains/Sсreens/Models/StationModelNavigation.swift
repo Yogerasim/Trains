@@ -16,6 +16,7 @@ struct InfoItem: Identifiable, Hashable {
 
 struct StationData: Identifiable, Equatable {
     let id = UUID()
+    let logoURL: URL?
     let logoName: String
     let stationName: String
     let subtitle: String?

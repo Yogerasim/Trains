@@ -10,7 +10,6 @@ final class StationsScheduleViewModel: ObservableObject {
     @Published var showServerError = false
 
     private let searchService: SearchServiceProtocol
-
     private let fromCode: String
     private let toCode: String
 
@@ -44,16 +43,23 @@ final class StationsScheduleViewModel: ObservableObject {
     // MARK: - Convert Segments → StationData
     private func convert(_ data: Segments) -> [StationData] {
         data.segments?.compactMap { seg in
-            
-            let durationText: String
-            if let dur = seg.duration {
-                durationText = formatDuration(Int(dur))
-            } else {
-                durationText = ""
-            }
+
+            let durationText = formatDuration(seg.duration)
+
+            let logoURL: URL? = {
+                if let logo = seg.thread?.carrier?.logo,
+                   let url = URL(string: logo),
+                   !logo.isEmpty {
+                    return url
+                }
+                return nil
+            }()
+
+            let fallbackLogo = "RZHD" // ⬅️ гарантированный asset
 
             return StationData(
-                logoName: seg.thread?.carrier?.logo ?? "DefaultLogo",
+                logoURL: logoURL,
+                logoName: fallbackLogo,
                 stationName: seg.thread?.carrier?.title ?? "Без названия",
                 subtitle: seg.thread?.title,
                 rightTopText: format(seg.departure),
@@ -63,6 +69,9 @@ final class StationsScheduleViewModel: ObservableObject {
             )
         } ?? []
     }
+
+    // MARK: - Helpers
+
     private let dateFormatter: DateFormatter = {
         let f = DateFormatter()
         f.dateFormat = "HH:mm"
@@ -80,6 +89,7 @@ final class StationsScheduleViewModel: ObservableObject {
         let mins = (s % 3600) / 60
         return "\(hours) ч \(mins) мин"
     }
+
     private func handle(_ error: Error) {
         if let urlError = error as? URLError,
            urlError.code == .notConnectedToInternet {
