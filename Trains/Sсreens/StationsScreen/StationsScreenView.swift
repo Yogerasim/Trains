@@ -42,10 +42,12 @@ struct StationsScreenView: View {
                     .navigationBarBackButtonHidden(true)
             }
             .onAppear {
-                filteredStations = vm.stations
                 Task {
                     await vm.load()
                 }
+            }
+            .onChange(of: vm.stations) { newValue in
+                filteredStations = newValue
             }
 
             if vm.showNoInternet {
