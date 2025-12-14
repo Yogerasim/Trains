@@ -6,6 +6,7 @@ struct InfoNav: Hashable {
     let carrierName: String
     let imageName: String
     let info: [InfoItem]
+    let carrierCode: String
 }
 
 struct InfoItem: Identifiable, Hashable {
@@ -16,6 +17,7 @@ struct InfoItem: Identifiable, Hashable {
 
 struct StationData: Identifiable, Equatable {
     let id = UUID()
+    let carrierCode: String?
     let logoURL: URL?
     let stationName: String
     let subtitle: String?

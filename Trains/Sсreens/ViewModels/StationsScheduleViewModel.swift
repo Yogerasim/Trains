@@ -45,6 +45,7 @@ final class StationsScheduleViewModel: ObservableObject {
         data.segments?.compactMap { seg in
 
             let durationText = formatDuration(seg.duration)
+            let carrier = seg.thread?.carrier
 
             let logoURL: URL? = {
                 if let logo = seg.thread?.carrier?.logo,
@@ -55,9 +56,8 @@ final class StationsScheduleViewModel: ObservableObject {
                 return nil
             }()
 
-            let fallbackLogo = "RZHD" // ⬅️ гарантированный asset
-
             return StationData(
+                carrierCode: carrier?.code.map { String($0) },
                 logoURL: logoURL,
                 stationName: seg.thread?.carrier?.title ?? "Без названия",
                 subtitle: seg.thread?.title,

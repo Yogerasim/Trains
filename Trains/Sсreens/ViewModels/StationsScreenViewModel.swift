@@ -76,6 +76,7 @@ final class StationsScreenViewModel: ObservableObject {
 
                 mapped.append(
                     StationData(
+                        carrierCode: carrier?.code.map { String($0) },
                         logoURL: logoURL,
                          // fallback asset
                         stationName: stationTitle,

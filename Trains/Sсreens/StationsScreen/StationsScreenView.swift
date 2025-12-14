@@ -32,11 +32,18 @@ struct StationsScreenView: View {
                             allStations: vm.stations
                         )
                     }
-                    .navigationDestination(for: InfoNav.self) { info in
+                    .navigationDestination(for: InfoNav.self) { nav in
                         InfoScreenView(
-                            carrierName: info.carrierName,
-                            imageName: info.imageName,
-                            infoItems: MockData.infoItems
+                            viewModel: InfoScreenViewModel(
+                                carrierCode: nav.carrierCode,
+                                carrierService: CarrierService(
+                                    client: APIConfig.client,
+                                    apikey: APIConfig.apiKey
+                                )
+                            ),
+                            onBack: {
+                                path.removeLast()
+                            }
                         )
                     }
                     .navigationBarBackButtonHidden(true)
@@ -91,6 +98,17 @@ struct StationsScreenView: View {
                                 middleBottomText: station.middleBottomText,
                                 rightBottomText: station.rightBottomText
                             )
+                            .onTapGesture {
+                                if let code = station.carrierCode {
+                                    // Fill required InfoNav fields; InfoScreenViewModel will fetch real data by code.
+                                    path.append(InfoNav(
+                                        carrierName: station.stationName,
+                                        imageName: "", // no local asset name; remote logo is used in InfoScreenViewModel
+                                        info: [],      // will be populated after fetch
+                                        carrierCode: code
+                                    ))
+                                }
+                            }
                         }
                     }
                     .padding(.horizontal, 16)
@@ -143,5 +161,3 @@ struct FilterScreenViewWrapper: View {
         )
     }
 }
-
-

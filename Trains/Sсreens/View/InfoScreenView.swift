@@ -1,48 +1,57 @@
 import SwiftUI
 
 struct InfoScreenView: View {
-    let carrierName: String
-    let imageName: String
-    let infoItems: [InfoItem]
-    @State private var showNoInternet = false
-    @State private var showServerError = false
+    @StateObject var viewModel: InfoScreenViewModel
+    let onBack: () -> Void
 
     var body: some View {
         VStack(spacing: 0) {
-            contentView
+            NavigationTitleView(title: "") {
+                onBack()
+            }
+
+            content
         }
         .background(DesignSystem.Colors.background)
-        .ignoresSafeArea(.keyboard)
+        .task {
+            await viewModel.load()
+        }
     }
 
     @ViewBuilder
-    private var contentView: some View {
-        if showNoInternet {
+    private var content: some View {
+        if viewModel.showNoInternet {
             PlaceholderView(type: .noInternet)
-                .frame(maxHeight: .infinity)
 
-        } else if showServerError {
+        } else if viewModel.showServerError {
             PlaceholderView(type: .serverError)
-                .frame(maxHeight: .infinity)
+
+        } else if viewModel.isLoading {
+            ProgressView()
 
         } else {
             ScrollView {
                 VStack(spacing: 16) {
-                    Image(imageName)
-                        .resizable()
-                        .scaledToFit()
+
+                    if let url = viewModel.logoURL {
+                        AsyncImage(url: url) { image in
+                            image
+                                .resizable()
+                                .scaledToFit()
+                        } placeholder: {
+                            Color.clear
+                        }
                         .frame(width: 343)
                         .clipShape(RoundedRectangle(cornerRadius: 16))
-                        .frame(maxWidth: .infinity)
                         .padding(.top, 16)
+                    }
 
-                    Text(carrierName)
+                    Text(viewModel.carrierName)
                         .font(DesignSystem.Fonts.bold24)
-                        .foregroundStyle(DesignSystem.Colors.textPrimary)
                         .frame(width: 343, alignment: .leading)
 
                     VStack(spacing: 0) {
-                        ForEach(infoItems) { item in
+                        ForEach(viewModel.infoItems) { item in
                             InfoElementView(
                                 title: item.title,
                                 subtitle: item.subtitle
@@ -55,16 +64,4 @@ struct InfoScreenView: View {
             }
         }
     }
-}
-
-
-#Preview {
-    InfoScreenView(
-        carrierName: "ОАО «РЖД»",
-        imageName: "Image",
-        infoItems: [
-            InfoItem(title: "Телефон", subtitle: "+7 (904) 329-27-71"),
-            InfoItem(title: "Email", subtitle: "i.lozgkina@yandex.ru"),
-        ]
-    )
 }
