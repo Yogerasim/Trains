@@ -47,14 +47,23 @@ final class StationsScreenViewModel: ObservableObject {
 
             var mapped: [StationData] = []
 
-            for segment in segments {
+            for (index, segment) in segments.enumerated() {
+                print("🧩 SEGMENT \(index):")
+                dump(segment)
 
-                let thread = segment.thread
-                let carrier = thread?.carrier
+                let carrier = segment.thread?.carrier
 
-                let depText = formatDateAny(segment.departure)
-                let arrText = formatDateAny(segment.arrival)
+                let departureTime = formatDateAny(segment.departure)
+                let arrivalTime = formatDateAny(segment.arrival)
                 let durationText = formatAnyDuration(segment.duration)
+
+                let todayDateText = formatTodayDate(Date())
+
+                let stationTitle =
+                    segment.thread?.carrier?.title ??
+                    "Перевозчик неизвестен"
+
+                let subtitleText: String? = nil
 
                 let logoURL: URL? = {
                     if let logo = carrier?.logo,
@@ -65,18 +74,16 @@ final class StationsScreenViewModel: ObservableObject {
                     return nil
                 }()
 
-                let fallbackLogo = "RZHD"   // ⬅️ гарантированный asset
-
                 mapped.append(
                     StationData(
                         logoURL: logoURL,
-                        logoName: fallbackLogo,
-                        stationName: thread?.title ?? "Неизвестно",
-                        subtitle: carrier?.title,
-                        rightTopText: depText,
-                        leftBottomText: arrText,
+                        logoName: "RZHD", // fallback asset
+                        stationName: stationTitle,
+                        subtitle: subtitleText,
+                        rightTopText: todayDateText,
+                        leftBottomText: departureTime,
                         middleBottomText: durationText,
-                        rightBottomText: arrText
+                        rightBottomText: arrivalTime
                     )
                 )
             }
@@ -125,5 +132,15 @@ final class StationsScreenViewModel: ObservableObject {
         let hours = seconds / 3600
         let mins = (seconds % 3600) / 60
         return "\(hours) ч \(mins) мин"
+    }
+    private lazy var dateFormatterDay: DateFormatter = {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "ru_RU")
+        f.dateFormat = "d MMMM"
+        return f
+    }()
+
+    private func formatTodayDate(_ date: Date) -> String {
+        dateFormatterDay.string(from: date)
     }
 }
