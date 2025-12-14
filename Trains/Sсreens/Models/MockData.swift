@@ -21,25 +21,14 @@ enum MockData {
 
     static let stationCards: [StationData] = [
         StationData(
-            logoURL: nil,
-            logoName: "RZHD",
+            logoURL: URL(string: "https://yastat.net/s3/rasp/media/data/company/logo/logo.gif"),
             stationName: "РЖД",
             subtitle: "С пересадкой в Костроме",
             rightTopText: "16 января",
             leftBottomText: "22:30",
             middleBottomText: "9 часов",
             rightBottomText: "22:30"
-        ),
-        StationData(
-            logoURL: nil,
-            logoName: "FGK",
-            stationName: "ФГК",
-            subtitle: nil,
-            rightTopText: "16 января",
-            leftBottomText: "00:10",
-            middleBottomText: "8 часов",
-            rightBottomText: "08:10"
-        ),
+        )
     ]
 
     static let infoItems: [InfoItem] = [

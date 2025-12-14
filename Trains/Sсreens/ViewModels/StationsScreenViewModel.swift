@@ -77,7 +77,7 @@ final class StationsScreenViewModel: ObservableObject {
                 mapped.append(
                     StationData(
                         logoURL: logoURL,
-                        logoName: "RZHD", // fallback asset
+                         // fallback asset
                         stationName: stationTitle,
                         subtitle: subtitleText,
                         rightTopText: todayDateText,

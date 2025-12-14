@@ -2,7 +2,7 @@ import SwiftUI
 
 struct StationView: View {
     let logoURL: URL?
-    let logoName: String
+
     let stationName: String
     let subtitle: String?
     let rightTopText: String
@@ -14,26 +14,7 @@ struct StationView: View {
         VStack(spacing: 0) {
             HStack(spacing: 8) {
 
-                Group {
-                    if let url = logoURL {
-                        AsyncImage(url: url) { image in
-                            image
-                                .resizable()
-                                .scaledToFill()
-                        } placeholder: {
-                            Image(logoName)
-                                .resizable()
-                                .scaledToFill()
-                                .opacity(0.3)
-                        }
-                    } else {
-                        Image(logoName)
-                            .resizable()
-                            .scaledToFill()
-                    }
-                }
-                .frame(width: 38, height: 38)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                logoImage
 
                 VStack(alignment: .leading, spacing: subtitle != nil ? 2 : 0) {
                     Text(stationName)
@@ -96,19 +77,43 @@ struct StationView: View {
         .background(DesignSystem.Colors.lightGray)
         .clipShape(RoundedRectangle(cornerRadius: 16))
     }
-}
 
+    // MARK: - Logo
+
+    private var logoImage: some View {
+        AsyncImage(url: logoURL) { phase in
+            switch phase {
+            case .empty:
+                Color.clear
+                    .frame(width: 38, height: 38)
+
+            case .success(let image):
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 38, height: 38)
+                    .cornerRadius(12)
+
+            case .failure:
+                Color.clear
+                    .frame(width: 38, height: 38)
+
+            @unknown default:
+                EmptyView()
+            }
+        }
+    }
+}
 #Preview {
     VStack(spacing: 20) {
         StationView(
-            logoURL: URL(string: "https://avatars.mds.yandex.net/get-rasp/123"),
-            logoName: "RZHD",
-            stationName: "РЖД",
+            logoURL: URL(string: "https://yastat.net/s3/rasp/media/data/company/logo/logo.gif"),
+            stationName: "РЖД / ФПК",
             subtitle: "С пересадкой в Костроме",
-            rightTopText: "16 января",
-            leftBottomText: "22:30",
-            middleBottomText: "9 часов",
-            rightBottomText: "22:30"
+            rightTopText: "14 декабря",
+            leftBottomText: "23:55",
+            middleBottomText: "8 ч",
+            rightBottomText: "07:55"
         )
     }
     .padding()

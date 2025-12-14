@@ -83,8 +83,7 @@ struct StationsScreenView: View {
                     VStack(spacing: 16) {
                         ForEach(filteredStations) { station in
                             StationView(
-                                logoURL: nil,
-                                logoName: station.logoName,
+                                logoURL: station.logoURL,
                                 stationName: station.stationName,
                                 subtitle: station.subtitle,
                                 rightTopText: station.rightTopText,

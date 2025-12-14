@@ -59,7 +59,6 @@ final class StationsScheduleViewModel: ObservableObject {
 
             return StationData(
                 logoURL: logoURL,
-                logoName: fallbackLogo,
                 stationName: seg.thread?.carrier?.title ?? "Без названия",
                 subtitle: seg.thread?.title,
                 rightTopText: format(seg.departure),
