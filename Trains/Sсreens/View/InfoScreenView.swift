@@ -13,6 +13,7 @@ struct InfoScreenView: View {
             content
         }
         .background(DesignSystem.Colors.background)
+        .navigationBarBackButtonHidden(true)
         .task {
             await viewModel.load()
         }

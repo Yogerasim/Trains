@@ -25,6 +25,7 @@ struct StationData: Identifiable, Equatable {
     let leftBottomText: String
     let middleBottomText: String
     let rightBottomText: String
+
 }
 
 struct Station: Identifiable, Hashable {
