@@ -34,7 +34,6 @@ struct UserAgreementView: View {
                         .font(DesignSystem.Fonts.regular17)
                         .foregroundStyle(DesignSystem.Colors.textPrimary)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        
                         .padding()
                     Text(title2)
                         .font(DesignSystem.Fonts.bold19)

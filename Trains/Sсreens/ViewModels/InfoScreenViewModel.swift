@@ -1,9 +1,8 @@
-import Foundation
 import Combine
+import Foundation
 
 @MainActor
 final class InfoScreenViewModel: ObservableObject {
-
     @Published var carrierName: String = ""
     @Published var logoURL: URL?
     @Published var infoItems: [InfoItem] = []
@@ -40,13 +39,10 @@ final class InfoScreenViewModel: ObservableObject {
                 return
             }
 
-            // Название перевозчика
             carrierName = carrier.title ?? "Перевозчик неизвестен"
 
-            // Логотип
             logoURL = carrier.logo.flatMap { URL(string: $0) }
 
-            // Инфо-блоки
             infoItems = [
                 carrier.phone.flatMap {
                     $0.isEmpty ? nil : InfoItem(title: "Телефон", subtitle: $0)
@@ -59,7 +55,7 @@ final class InfoScreenViewModel: ObservableObject {
                 },
                 carrier.address.flatMap {
                     InfoItem(title: "Адрес", subtitle: $0)
-                }
+                },
             ].compactMap { $0 }
 
             print("✅ Carrier loaded:", carrierName)
@@ -69,7 +65,8 @@ final class InfoScreenViewModel: ObservableObject {
             print("❌ Carrier load error:", error)
 
             if let urlError = error as? URLError,
-               urlError.code == .notConnectedToInternet {
+               urlError.code == .notConnectedToInternet
+            {
                 showNoInternet = true
             } else {
                 showServerError = true

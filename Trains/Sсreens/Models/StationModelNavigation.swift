@@ -35,13 +35,13 @@ struct Station: Identifiable, Hashable {
     let city: String
 }
 
-struct City: Identifiable, Hashable, Codable{
+struct City: Identifiable, Hashable, Codable {
     var id = UUID()
     let name: String
     let stations: [StationInfo]
 }
 
-struct StationInfo: Hashable, Codable{
+struct StationInfo: Hashable, Codable {
     let title: String
     let code: String
 }

@@ -1,9 +1,8 @@
-import Foundation
 import Combine
+import Foundation
 
 @MainActor
 final class RouteSelectionViewModel: ObservableObject {
-
     @Published var fromCity: City?
     @Published var toCity: City?
 
@@ -14,16 +13,15 @@ final class RouteSelectionViewModel: ObservableObject {
 
     init() {}
 
-    // MARK: - Пользователь выбрал станцию
     func selectFrom(city: City, station: StationInfo) {
-        self.fromCity = city
-        self.fromStation = station
+        fromCity = city
+        fromStation = station
         updateSearchState()
     }
 
     func selectTo(city: City, station: StationInfo) {
-        self.toCity = city
-        self.toStation = station
+        toCity = city
+        toStation = station
         updateSearchState()
     }
 

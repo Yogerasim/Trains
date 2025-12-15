@@ -1,12 +1,10 @@
-import SwiftUI
 import Combine
+import SwiftUI
 
 struct ChoosingDirectionView: View {
-
     @StateObject private var model = ChoosingDirectionViewModel()
     @StateObject private var appViewModel = AppViewModel()
 
-    // 👇 ViewModel для сторис
     @StateObject private var storyVM = StoryCardsScrollViewModel(
         stories: Story.all
     )
@@ -16,8 +14,6 @@ struct ChoosingDirectionView: View {
 
     var body: some View {
         VStack(spacing: 16) {
-
-            // ✅ НОВЫЙ API
             StoryCardsScrollView(viewModel: storyVM)
                 .padding(.top, 16)
                 .onReceive(storyVM.$currentStoryID.compactMap { $0 }) { id in
@@ -34,7 +30,7 @@ struct ChoosingDirectionView: View {
 
             Spacer()
         }
-        // ---------- Навигация ----------
+
         .fullScreenCover(item: $model.navigation) { nav in
             switch nav {
             case .cityFrom:
@@ -60,7 +56,7 @@ struct ChoosingDirectionView: View {
                 )
             }
         }
-        // ---------- Stories ----------
+
         .fullScreenCover(isPresented: $showStories) {
             StoriesView(
                 stories: storyVM.stories,
@@ -76,8 +72,6 @@ struct ChoosingDirectionView: View {
             )
         }
     }
-
-    // MARK: - Content
 
     @ViewBuilder
     private var content: some View {

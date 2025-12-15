@@ -1,8 +1,7 @@
-import Foundation
 import Combine
+import Foundation
 
 final class ServicesControl: ObservableObject {
-
     static let shared = ServicesControl()
 
     @Published var runTests: Bool = true

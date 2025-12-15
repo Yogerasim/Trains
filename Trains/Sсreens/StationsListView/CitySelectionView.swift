@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct CitySelectionView: View {
-
     @StateObject private var vm = CitySelectionViewModel()
     var onSelect: (City, StationInfo) -> Void
 
@@ -11,7 +10,6 @@ struct CitySelectionView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                // Если есть города — сразу показываем список, не показываем лоадер
                 SelectionListView(
                     title: "Выбор города",
                     items: vm.cities.map { $0.name },
@@ -22,7 +20,6 @@ struct CitySelectionView: View {
                         showStationSelection = true
                     }
                 }
-                
             }
             .background(DesignSystem.Colors.background)
             .task {

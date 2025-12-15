@@ -5,7 +5,6 @@ import OpenAPIURLSession
 
 @MainActor
 final class StationsScreenViewModel: ObservableObject {
-
     @Published var stations: [StationData] = []
     @Published var isLoading = false
     @Published var showNoInternet = false
@@ -57,7 +56,6 @@ final class StationsScreenViewModel: ObservableObject {
                 let arrivalTime = formatDateAny(segment.arrival)
                 let durationText = formatAnyDuration(segment.duration)
 
-                // If departure date is required for StationData, skip this segment if missing
                 guard let departureDate = segment.departure else {
                     continue
                 }
@@ -75,7 +73,8 @@ final class StationsScreenViewModel: ObservableObject {
                 let logoURL: URL? = {
                     if let logo = carrier?.logo,
                        let url = URL(string: logo),
-                       !logo.isEmpty {
+                       !logo.isEmpty
+                    {
                         return url
                     }
                     return nil
@@ -110,8 +109,6 @@ final class StationsScreenViewModel: ObservableObject {
         }
     }
 
-    // MARK: - Helpers
-
     private lazy var timeFormatter: DateFormatter = {
         let f = DateFormatter()
         f.dateFormat = "HH:mm"
@@ -122,7 +119,8 @@ final class StationsScreenViewModel: ObservableObject {
         guard let v = v else { return "" }
         if let d = v as? Date { return timeFormatter.string(from: d) }
         if let s = v as? String,
-           let d = ISO8601DateFormatter().date(from: s) {
+           let d = ISO8601DateFormatter().date(from: s)
+        {
             return timeFormatter.string(from: d)
         }
         return String(describing: v)
@@ -142,6 +140,7 @@ final class StationsScreenViewModel: ObservableObject {
         let mins = (seconds % 3600) / 60
         return "\(hours) ч \(mins) мин"
     }
+
     private lazy var dateFormatterDay: DateFormatter = {
         let f = DateFormatter()
         f.locale = Locale(identifier: "ru_RU")

@@ -1,5 +1,5 @@
-import SwiftUI
 import Combine
+import SwiftUI
 
 @MainActor
 final class ChoosingDirectionViewModel: ObservableObject {
@@ -42,7 +42,9 @@ final class ChoosingDirectionViewModel: ObservableObject {
     }
 
     func openCityFrom() { navigation = .cityFrom }
+
     func openCityTo() { navigation = .cityTo }
+
     func openStations() { navigation = .stations }
 
     func swapDirections() {

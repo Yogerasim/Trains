@@ -2,9 +2,6 @@ import Foundation
 import OpenAPIRuntime
 import OpenAPIURLSession
 
-// MARK: - ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
-
-/// Извлекает строку из значения Any, поддерживает Optional
 private func unwrapAnyToString(_ any: Any) -> String? {
     let mirror = Mirror(reflecting: any)
     if mirror.displayStyle == .optional {
@@ -16,11 +13,9 @@ private func unwrapAnyToString(_ any: Any) -> String? {
     return any as? String
 }
 
-/// Ищет в codes любое поле, где имя содержит "yandex"
 private func extractYandexCode(from codes: Any) -> String? {
     let mirror = Mirror(reflecting: codes)
 
-    // 1. Ищем поля с названием, похожим на yandex
     for child in mirror.children {
         guard let label = child.label?.lowercased() else { continue }
 
@@ -31,7 +26,6 @@ private func extractYandexCode(from codes: Any) -> String? {
         }
     }
 
-    // 2. Фолбэк: первая строка
     for child in mirror.children {
         if let value = unwrapAnyToString(child.value) {
             return value
@@ -41,10 +35,7 @@ private func extractYandexCode(from codes: Any) -> String? {
     return nil
 }
 
-// MARK: - СЕРВИС
-
 final class RussianCitiesService {
-
     func getRussianCities(from allStations: AllStations) -> [City] {
         guard let countries = allStations.countries else { return [] }
         guard let russia = countries.first(where: { $0.title == "Россия" }) else { return [] }
@@ -59,7 +50,7 @@ final class RussianCitiesService {
             "platform",
             "stop",
             "checkpoint",
-            "halt"
+            "halt",
         ]
 
         for region in regions {

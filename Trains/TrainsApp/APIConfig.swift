@@ -7,12 +7,9 @@ enum APIConfig {
     static let runTests: Bool = true
 
     static func makeClient() -> Client {
-        //LoggingURLProtocol.registerIfNeeded()
-
         return Client(
             serverURL: try! Servers.Server1.url(),
             transport: HTMLJSONTransport()
-            
         )
     }
 

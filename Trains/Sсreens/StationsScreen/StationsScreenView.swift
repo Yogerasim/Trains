@@ -112,11 +112,10 @@ struct StationsScreenView: View {
                             )
                             .onTapGesture {
                                 if let code = station.carrierCode {
-                                    // Fill required InfoNav fields; InfoScreenViewModel will fetch real data by code.
                                     path.append(InfoNav(
                                         carrierName: station.stationName,
-                                        imageName: "", // no local asset name; remote logo is used in InfoScreenViewModel
-                                        info: [],      // will be populated after fetch
+                                        imageName: "",
+                                        info: [],
                                         carrierCode: code
                                     ))
                                 }
@@ -172,4 +171,3 @@ struct FilterScreenViewWrapper: View {
         )
     }
 }
-

@@ -12,13 +12,10 @@ struct SelectionListView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-
-            // 🔹 Кастомный хедер
             NavigationTitleView(title: title) {
                 dismiss()
             }
 
-            // 🔹 Поиск
             HStack(spacing: 8) {
                 Image(systemName: "magnifyingglass")
                     .foregroundStyle(.gray)
@@ -40,7 +37,6 @@ struct SelectionListView: View {
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
 
-            // 🔥 ТОЛЬКО List
             List {
                 if isLoading {
                     ProgressView()
@@ -71,6 +67,7 @@ struct SelectionListView: View {
             print("📋 NON EMPTY:", items.filter { !$0.isEmpty }.count)
         }
     }
+
     private var filteredItems: [String] {
         let cleanItems = items.filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
 

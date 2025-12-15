@@ -1,9 +1,8 @@
-import Foundation
 import Combine
+import Foundation
 
 @MainActor
 final class StoryCardsScrollViewModel: ObservableObject {
-
     @Published private(set) var stories: [Story]
     @Published private(set) var viewedIDs: Set<UUID>
     @Published private(set) var currentStoryID: UUID?
@@ -18,8 +17,6 @@ final class StoryCardsScrollViewModel: ObservableObject {
         self.currentStoryID = currentStoryID
     }
 
-    // MARK: - Intent
-
     func selectStory(at index: Int) {
         guard stories.indices.contains(index) else { return }
 
@@ -27,8 +24,6 @@ final class StoryCardsScrollViewModel: ObservableObject {
         currentStoryID = story.id
         viewedIDs.insert(story.id)
     }
-
-    // MARK: - Helpers (for View)
 
     func isViewed(_ story: Story) -> Bool {
         viewedIDs.contains(story.id)

@@ -5,6 +5,7 @@ import OpenAPIURLSession
 typealias AllStationsResponseType = Components.Schemas.AllStationsResponse
 
 protocol StationsListServiceProtocol {
+
     func getAllStations(lang: String?) async throws -> AllStationsResponseType
 }
 
@@ -17,8 +18,9 @@ final class StationsListService: StationsListServiceProtocol {
         self.apiKey = apiKey
     }
 
+
     func getAllStations(lang: String? = "ru_RU") async throws -> AllStationsResponseType {
-        var urlComponents = URLComponents(string: "https://api.rasp.yandex-net.ru/v3.0/stations_list/")!
+        var urlComponents = URLComponents(string: "https:
         var queryItems: [URLQueryItem] = [
             URLQueryItem(name: "apikey", value: apiKey)
         ]
@@ -29,7 +31,7 @@ final class StationsListService: StationsListServiceProtocol {
 
         let request = URLRequest(url: urlComponents.url!)
         
-        // Используем OpenAPIURLSession для запроса
+        
         let (data, response) = try await URLSession.shared.data(for: request)
         
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
@@ -43,14 +45,15 @@ final class StationsListService: StationsListServiceProtocol {
 
 extension StationsListService {
 
-    /// Тестирование получения списка станций
-    /// - Parameter limitToOneCountry: если true, выводится только первая страна для ускорения теста
+    
+    
+
     func testFetchStationsList(limitToOneCountry: Bool = false) {
         Task {
             do {
                 let response = try await getAllStations()
                 
-                // Разворачиваем опциональный массив стран
+                
                 guard let countries = response.countries, !countries.isEmpty else {
                     print("❌ Нет стран в ответе")
                     return
@@ -74,7 +77,7 @@ extension StationsListService {
                     return
                 }
 
-                // Если limitToOneCountry == false, выводим количество стран
+                
                 print("✅ Всего стран: \(countries.count)")
 
             } catch {

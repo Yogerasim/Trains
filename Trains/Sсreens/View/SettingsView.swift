@@ -1,13 +1,11 @@
 import SwiftUI
 
 struct SettingsView: View {
-
     @StateObject private var vm = SettingsViewModel()
 
     var body: some View {
         VStack {
             VStack(spacing: 0) {
-
                 SettingToggleRow(
                     title: "Тёмная тема",
                     isOn: Binding(

@@ -1,9 +1,8 @@
-import Foundation
 import Combine
+import Foundation
 
 @MainActor
 final class StationsScheduleViewModel: ObservableObject {
-
     @Published var items: [StationData] = []
     @Published var isLoading = false
     @Published var showNoInternet = false
@@ -19,7 +18,6 @@ final class StationsScheduleViewModel: ObservableObject {
         self.searchService = searchService
     }
 
-    // MARK: - Load schedule
     func load() async {
         isLoading = true
         showNoInternet = false
@@ -33,24 +31,23 @@ final class StationsScheduleViewModel: ObservableObject {
                 date: nil
             )
 
-            self.items = convert(result)
+            items = convert(result)
 
         } catch {
             handle(error)
         }
     }
 
-    // MARK: - Convert Segments → StationData
     private func convert(_ data: Segments) -> [StationData] {
         data.segments?.compactMap { seg in
-
             let durationText = formatAnyDuration(seg.duration)
             let carrier = seg.thread?.carrier
 
             let logoURL: URL? = {
                 if let logo = seg.thread?.carrier?.logo,
                    let url = URL(string: logo),
-                   !logo.isEmpty {
+                   !logo.isEmpty
+                {
                     return url
                 }
                 return nil
@@ -84,8 +81,6 @@ final class StationsScheduleViewModel: ObservableObject {
             )
         } ?? []
     }
-
-    // MARK: - Helpers
 
     private let timeFormatter: DateFormatter = {
         let f = DateFormatter()
@@ -121,7 +116,8 @@ final class StationsScheduleViewModel: ObservableObject {
 
     private func handle(_ error: Error) {
         if let urlError = error as? URLError,
-           urlError.code == .notConnectedToInternet {
+           urlError.code == .notConnectedToInternet
+        {
             showNoInternet = true
         } else {
             showServerError = true

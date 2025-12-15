@@ -30,7 +30,6 @@ struct InfoScreenView: View {
         } else {
             ScrollView {
                 VStack(spacing: 16) {
-
                     if let url = viewModel.logoURL {
                         AsyncImage(url: url) { image in
                             image

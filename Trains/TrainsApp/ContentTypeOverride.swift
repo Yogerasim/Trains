@@ -1,12 +1,9 @@
 import Foundation
+import HTTPTypes
 import OpenAPIRuntime
 import OpenAPIURLSession
-import HTTPTypes
 
-/// A transport that wraps URLSessionTransport and fixes misreported Content-Type headers.
-/// If the server responds with "text/html" while the body is actually JSON, we rewrite it to "application/json".
 struct HTMLJSONTransport: ClientTransport, Sendable {
-
     private let underlying: ClientTransport
 
     init(underlying: ClientTransport = URLSessionTransport()) {
@@ -27,12 +24,11 @@ struct HTMLJSONTransport: ClientTransport, Sendable {
         )
 
         if let contentType = response.headerFields[.contentType],
-           contentType.lowercased().hasPrefix("text/html") {
-            // Force JSON decoding downstream.
+           contentType.lowercased().hasPrefix("text/html")
+        {
             response.headerFields[.contentType] = "application/json; charset=utf-8"
         }
 
         return (response, responseBody)
     }
 }
-

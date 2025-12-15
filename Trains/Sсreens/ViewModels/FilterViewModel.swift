@@ -1,20 +1,19 @@
-import Foundation
 import Combine
+import Foundation
 
 @MainActor
 final class FilterViewModel: ObservableObject {
-
     enum TimeSlot: Int, CaseIterable {
-        case morning   // 06–12
-        case day       // 12–18
-        case evening   // 18–00
+        case morning
+        case day
+        case evening
 
         func contains(_ date: Date) -> Bool {
             let hour = Calendar.current.component(.hour, from: date)
 
             switch self {
             case .morning: return hour >= 6 && hour < 12
-            case .day:     return hour >= 12 && hour < 18
+            case .day: return hour >= 12 && hour < 18
             case .evening: return hour >= 18 || hour < 6
             }
         }
@@ -32,8 +31,6 @@ final class FilterViewModel: ObservableObject {
             timeFilterPass(station) && transferFilterPass(station)
         }
     }
-
-    // MARK: - Private
 
     private func timeFilterPass(_ station: StationData) -> Bool {
         guard timeSelections.contains(true),

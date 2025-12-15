@@ -163,6 +163,7 @@ struct StoriesView: View {
             advanceToNextStoryWithoutReset()
         }
     }
+
     private func advanceToNextStoryWithoutReset() {
         reportViewedIfNeeded(for: currentStory)
         currentIndex = (currentIndex + 1) % count

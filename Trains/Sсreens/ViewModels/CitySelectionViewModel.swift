@@ -3,7 +3,6 @@ import Foundation
 
 @MainActor
 final class CitySelectionViewModel: ObservableObject {
-
     @Published var cities: [City] = []
     @Published var isLoading = false
     @Published var showNoInternet = false
@@ -14,14 +13,12 @@ final class CitySelectionViewModel: ObservableObject {
     private let cacheKey = "cachedCities"
 
     init() {
-        // загружаем из кэша сразу, если есть
         if let cached = loadCitiesFromCache() {
-            self.cities = cached
+            cities = cached
         }
     }
 
     func load() async {
-        // Лоадер включаем только если список пустой
         if cities.isEmpty { isLoading = true }
         showNoInternet = false
         showServerError = false
@@ -37,7 +34,7 @@ final class CitySelectionViewModel: ObservableObject {
                         .isEmpty
                 }
 
-            self.cities = citiesList
+            cities = citiesList
             saveCitiesToCache(citiesList)
         } catch {
             if let urlError = error as? URLError, urlError.code == .notConnectedToInternet {

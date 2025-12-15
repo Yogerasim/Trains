@@ -1,15 +1,14 @@
 import SwiftUI
 
 struct StationSelectionView: View {
-    
     @StateObject private var vm: StationSelectionViewModel
     var onSelect: (StationInfo) -> Void
-    
+
     init(city: City, onSelect: @escaping (StationInfo) -> Void) {
         _vm = StateObject(wrappedValue: StationSelectionViewModel(city: city))
         self.onSelect = onSelect
     }
-    
+
     var body: some View {
         VStack {
             SelectionListView(
@@ -27,4 +26,3 @@ struct StationSelectionView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 }
-

@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct StoryCardsScrollView: View {
-
     @StateObject private var vm: StoryCardsScrollViewModel
 
     init(viewModel: StoryCardsScrollViewModel) {

@@ -9,6 +9,6 @@ final class StationSelectionViewModel: ObservableObject {
 
     init(city: City) {
         self.city = city
-        self.stations = city.stations.sorted { $0.title < $1.title }
+        stations = city.stations.sorted { $0.title < $1.title }
     }
 }

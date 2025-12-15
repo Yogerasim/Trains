@@ -5,6 +5,7 @@ import OpenAPIURLSession
 typealias AllStations = Components.Schemas.AllStationsResponse
 
 protocol StationsListServiceProtocol {
+
     func getAllStations(lang: String?) async throws -> AllStations
 }
 
@@ -17,8 +18,9 @@ final class StationsListService: StationsListServiceProtocol {
         self.apiKey = apiKey
     }
 
+
     func getAllStations(lang: String? = "ru_RU") async throws -> AllStations {
-        var urlComponents = URLComponents(string: "https://api.rasp.yandex-net.ru/v3.0/stations_list/")!
+        var urlComponents = URLComponents(string: "https:
         var queryItems: [URLQueryItem] = [
             URLQueryItem(name: "apikey", value: apiKey)
         ]
@@ -40,6 +42,7 @@ final class StationsListService: StationsListServiceProtocol {
 }
 
 extension StationsListService {
+
     func debugPrintAllStations() async {
         print("=== DEBUG STATIONS START ===")
 
