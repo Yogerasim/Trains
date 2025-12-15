@@ -6,14 +6,11 @@ struct InfoScreenView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            NavigationTitleView(title: "") {
-                onBack()
-            }
-
             content
         }
         .background(DesignSystem.Colors.background)
-        .navigationBarBackButtonHidden(true)
+        .navigationTitle("Информация о перевозчике")
+        .navigationBarTitleDisplayMode(.inline)
         .task {
             await viewModel.load()
         }

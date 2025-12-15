@@ -23,6 +23,8 @@ struct StationSelectionView: View {
             }
         }
         .background(DesignSystem.Colors.background)
-        .navigationTitle("Выбор станции")
+        .navigationBarBackButtonHidden(true)
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
+
