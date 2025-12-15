@@ -23,7 +23,7 @@ struct CityRowView: View {
                     .foregroundStyle(DesignSystem.Colors.textPrimary)
                     .padding(.trailing, 16)
             }
-            .frame(height: 60) // ❗️убрали width: 375
+            .frame(height: 45)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
@@ -31,5 +31,6 @@ struct CityRowView: View {
 }
 
 #Preview {
+    CityRowView(city: "Москва")
     CityRowView(city: "Москва")
 }

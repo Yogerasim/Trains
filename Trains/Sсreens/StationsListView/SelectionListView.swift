@@ -10,17 +10,15 @@ struct SelectionListView: View {
 
     @State private var searchText = ""
 
-    private var filteredItems: [String] {
-        if searchText.isEmpty { items }
-        else { items.filter { $0.lowercased().contains(searchText.lowercased()) }}
-    }
-
     var body: some View {
         VStack(spacing: 0) {
+
+            // 🔹 Кастомный хедер
             NavigationTitleView(title: title) {
                 dismiss()
             }
 
+            // 🔹 Поиск
             HStack(spacing: 8) {
                 Image(systemName: "magnifyingglass")
                     .foregroundStyle(.gray)
@@ -40,34 +38,48 @@ struct SelectionListView: View {
             .background(Color(.systemGray6))
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(.horizontal, 16)
-            .padding(.top, 12)
+            .padding(.vertical, 12)
 
-            ScrollView {
-                LazyVStack(spacing: 0) {
-                    if isLoading {
-                        ProgressView()
-                            .controlSize(.large)
-                            .tint(.gray)
-                            .padding(.vertical, 150)
-                    }
-
-                    ForEach(filteredItems, id: \.self) { item in
-                        CityRowView(city: item) {
-                            onSelect(item)
-                        }
-                    }
-                    
-                    if !isLoading && filteredItems.isEmpty {
-                        PlaceholderView(type: .noData)
-                            .padding(.top, 50)
-                    }
+            // 🔥 ТОЛЬКО List
+            List {
+                if isLoading {
+                    ProgressView()
+                        .frame(maxWidth: .infinity)
+                        .listRowSeparator(.hidden)
                 }
-                .padding(.top, 8)
+
+                ForEach(filteredItems, id: \.self) { item in
+                    CityRowView(city: item) {
+                        onSelect(item)
+                    }
+                    .listRowInsets(.none)
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(DesignSystem.Colors.background)
+                }
+
+                if !isLoading && filteredItems.isEmpty {
+                    PlaceholderView(type: .noData)
+                        .listRowSeparator(.hidden)
+                }
             }
-            .frame(maxHeight: .infinity)
+            .listStyle(.plain)
         }
         .background(DesignSystem.Colors.background)
         .ignoresSafeArea(.keyboard)
+        .onAppear {
+            print("📋 ITEMS COUNT:", items.count)
+            print("📋 NON EMPTY:", items.filter { !$0.isEmpty }.count)
+        }
+    }
+    private var filteredItems: [String] {
+        let cleanItems = items.filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+
+        if searchText.isEmpty {
+            return cleanItems
+        } else {
+            return cleanItems.filter {
+                $0.localizedCaseInsensitiveContains(searchText)
+            }
+        }
     }
 }
-

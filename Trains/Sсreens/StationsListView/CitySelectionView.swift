@@ -22,6 +22,7 @@ struct CitySelectionView: View {
                         showStationSelection = true
                     }
                 }
+                
             }
             .background(DesignSystem.Colors.background)
             .task {

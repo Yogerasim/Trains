@@ -53,9 +53,11 @@ extension StationsListService {
                 var allCities: [String] = []
 
                 for region in regions {
-                    for settlement in region.settlements ?? [] {
-                        allCities.append(settlement.title ?? "")
-                    }
+                    allCities.append(
+                        contentsOf: region.settlements?
+                            .compactMap { $0.title }
+                            .filter { !$0.isEmpty } ?? []
+                    )
                 }
 
                 let sorted = allCities.sorted()

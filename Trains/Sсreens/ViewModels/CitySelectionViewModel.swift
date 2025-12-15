@@ -29,7 +29,14 @@ final class CitySelectionViewModel: ObservableObject {
 
         do {
             let allStations = try await stationsService.getAllStations()
-            let citiesList = russianService.getRussianCities(from: allStations)
+            let citiesList = russianService
+                .getRussianCities(from: allStations)
+                .filter {
+                    !$0.name
+                        .trimmingCharacters(in: .whitespacesAndNewlines)
+                        .isEmpty
+                }
+
             self.cities = citiesList
             saveCitiesToCache(citiesList)
         } catch {
