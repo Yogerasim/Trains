@@ -9,7 +9,7 @@ struct UserAgreementView: View {
     private let shortText = """
     Данный документ является действующим, если расположен по адресу: https:
 
-        Российская Федерация, город Москва
+    Российская Федерация, город Москва
     """
     private let title2 = """
         1. ТЕРМИНЫ
@@ -33,10 +33,13 @@ struct UserAgreementView: View {
                     Text(shortText)
                         .font(DesignSystem.Fonts.regular17)
                         .foregroundStyle(DesignSystem.Colors.textPrimary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        
                         .padding()
                     Text(title2)
                         .font(DesignSystem.Fonts.bold19)
                         .foregroundStyle(DesignSystem.Colors.textPrimary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
 
                     Text(longText)
                         .font(DesignSystem.Fonts.regular17)
