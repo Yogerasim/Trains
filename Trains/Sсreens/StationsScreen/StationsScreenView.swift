@@ -126,9 +126,8 @@ struct StationsScreenView: View {
                     .padding(.horizontal, 16)
                     .padding(.bottom, 100)
                 }
+                .frame(maxHeight: .infinity)
             }
-
-            Spacer()
 
             PrimaryButton(title: "Уточнить время", showBadge: hasActiveFilters) {
                 path.append(FilterNav())
@@ -173,3 +172,4 @@ struct FilterScreenViewWrapper: View {
         )
     }
 }
+

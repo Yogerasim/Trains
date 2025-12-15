@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 enum MockData {
     static let cities = [
@@ -37,3 +38,4 @@ enum MockData {
         InfoItem(title: "Email", subtitle: "i.lozgkina@yandex.ru"),
     ]
 }
+
