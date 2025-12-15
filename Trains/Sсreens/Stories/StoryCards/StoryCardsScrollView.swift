@@ -1,36 +1,25 @@
 import SwiftUI
 
 struct StoryCardsScrollView: View {
-    let stories: [Story]
-    let onSelect: (Int) -> Void
 
-    let viewedIDs: Set<UUID>
-    let currentStoryID: UUID?
+    @StateObject private var vm: StoryCardsScrollViewModel
 
-    init(
-        stories: [Story],
-        onSelect: @escaping (Int) -> Void,
-        viewedIDs: Set<UUID>,
-        currentStoryID: UUID?
-    ) {
-        self.stories = stories
-        self.onSelect = onSelect
-        self.viewedIDs = viewedIDs
-        self.currentStoryID = currentStoryID
+    init(viewModel: StoryCardsScrollViewModel) {
+        _vm = StateObject(wrappedValue: viewModel)
     }
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
-                ForEach(Array(stories.enumerated()), id: \.element.id) { index, story in
+                ForEach(Array(vm.stories.enumerated()), id: \.element.id) { index, story in
                     StoryCardView(
                         image: story.backgroundImage,
                         title: story.title,
-                        isViewed: viewedIDs.contains(story.id),
-                        isCurrent: currentStoryID == story.id
+                        isViewed: vm.isViewed(story),
+                        isCurrent: vm.isCurrent(story)
                     )
                     .onTapGesture {
-                        onSelect(index)
+                        vm.selectStory(at: index)
                     }
                 }
             }
@@ -38,13 +27,4 @@ struct StoryCardsScrollView: View {
         }
         .frame(height: 160)
     }
-}
-
-#Preview {
-    StoryCardsScrollView(
-        stories: Story.all,
-        onSelect: { _ in },
-        viewedIDs: [],
-        currentStoryID: nil
-    )
 }

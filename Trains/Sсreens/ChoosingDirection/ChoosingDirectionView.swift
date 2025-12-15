@@ -1,29 +1,31 @@
 import SwiftUI
+import Combine
 
 struct ChoosingDirectionView: View {
-    // model должен быть StateObject, т.к. ChoosingDirectionViewModel — класс ObservableObject
+
     @StateObject private var model = ChoosingDirectionViewModel()
-    @StateObject private var viewModel = AppViewModel()
+    @StateObject private var appViewModel = AppViewModel()
+
+    // 👇 ViewModel для сторис
+    @StateObject private var storyVM = StoryCardsScrollViewModel(
+        stories: Story.all
+    )
 
     @State private var showStories = false
     @State private var selectedIndex = 0
-    @State private var viewedStoryIDs: Set<UUID> = []
-    let stories = Story.all
 
     var body: some View {
         VStack(spacing: 16) {
-            StoryCardsScrollView(
-                stories: stories,
-                onSelect: { index in
-                    selectedIndex = index
-                    DispatchQueue.main.async {
+
+            // ✅ НОВЫЙ API
+            StoryCardsScrollView(viewModel: storyVM)
+                .padding(.top, 16)
+                .onReceive(storyVM.$currentStoryID.compactMap { $0 }) { id in
+                    if let index = storyVM.stories.firstIndex(where: { $0.id == id }) {
+                        selectedIndex = index
                         showStories = true
                     }
-                },
-                viewedIDs: viewedStoryIDs,
-                currentStoryID: nil
-            )
-            .padding(.top, 16)
+                }
 
             Spacer().frame(height: 12)
 
@@ -32,7 +34,8 @@ struct ChoosingDirectionView: View {
 
             Spacer()
         }
-        .fullScreenCover(item: $model.navigation) { (nav: ChoosingDirectionNavigation) in
+        // ---------- Навигация ----------
+        .fullScreenCover(item: $model.navigation) { nav in
             switch nav {
             case .cityFrom:
                 CitySelectionView { city, station in
@@ -57,12 +60,15 @@ struct ChoosingDirectionView: View {
                 )
             }
         }
+        // ---------- Stories ----------
         .fullScreenCover(isPresented: $showStories) {
             StoriesView(
-                stories: stories,
+                stories: storyVM.stories,
                 startIndex: $selectedIndex,
                 onViewed: { id in
-                    viewedStoryIDs.insert(id)
+                    storyVM.selectStory(
+                        at: storyVM.stories.firstIndex { $0.id == id } ?? 0
+                    )
                 },
                 onClose: {
                     showStories = false
@@ -70,6 +76,8 @@ struct ChoosingDirectionView: View {
             )
         }
     }
+
+    // MARK: - Content
 
     @ViewBuilder
     private var content: some View {
