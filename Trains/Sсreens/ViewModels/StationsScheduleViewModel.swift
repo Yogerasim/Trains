@@ -44,7 +44,7 @@ final class StationsScheduleViewModel: ObservableObject {
     private func convert(_ data: Segments) -> [StationData] {
         data.segments?.compactMap { seg in
 
-            let durationText = formatDuration(seg.duration)
+            let durationText = formatAnyDuration(seg.duration)
             let carrier = seg.thread?.carrier
 
             let logoURL: URL? = {
@@ -56,36 +56,66 @@ final class StationsScheduleViewModel: ObservableObject {
                 return nil
             }()
 
+            let departureDate: Date? = {
+                guard let value = seg.departure else { return nil }
+                if let d = value as? Date { return d }
+                if let s = value as? String { return ISO8601DateFormatter().date(from: s) }
+                return nil
+            }()
+
+            let hasTransfers: Bool = {
+                if let uid = seg.thread?.uid {
+                    return uid.contains("_")
+                }
+                return false
+            }()
+
             return StationData(
                 carrierCode: carrier?.code.map { String($0) },
                 logoURL: logoURL,
                 stationName: seg.thread?.carrier?.title ?? "Без названия",
                 subtitle: seg.thread?.title,
-                rightTopText: format(seg.departure),
-                leftBottomText: format(seg.departure),
+                rightTopText: formatDateAny(seg.departure),
+                leftBottomText: formatDateAny(seg.departure),
                 middleBottomText: durationText,
-                rightBottomText: format(seg.arrival)
+                rightBottomText: formatDateAny(seg.arrival),
+                departureDate: departureDate,
+                hasTransfers: hasTransfers
             )
         } ?? []
     }
 
     // MARK: - Helpers
 
-    private let dateFormatter: DateFormatter = {
+    private let timeFormatter: DateFormatter = {
         let f = DateFormatter()
         f.dateFormat = "HH:mm"
         return f
     }()
 
-    private func format(_ date: Date?) -> String {
-        guard let date else { return "" }
-        return dateFormatter.string(from: date)
+    private func formatDateAny(_ value: Any?) -> String {
+        guard let value else { return "" }
+        if let d = value as? Date {
+            return timeFormatter.string(from: d)
+        }
+        if let s = value as? String, let d = ISO8601DateFormatter().date(from: s) {
+            return timeFormatter.string(from: d)
+        }
+        return ""
     }
 
-    private func formatDuration(_ seconds: Int?) -> String {
-        guard let s = seconds else { return "" }
-        let hours = s / 3600
-        let mins = (s % 3600) / 60
+    private func formatAnyDuration(_ seconds: Any?) -> String {
+        guard let seconds else { return "" }
+        if let i = seconds as? Int { return formatDuration(i) }
+        if let i32 = seconds as? Int32 { return formatDuration(Int(i32)) }
+        if let i64 = seconds as? Int64 { return formatDuration(Int(i64)) }
+        if let str = seconds as? String, let i = Int(str) { return formatDuration(i) }
+        return ""
+    }
+
+    private func formatDuration(_ seconds: Int) -> String {
+        let hours = seconds / 3600
+        let mins = (seconds % 3600) / 60
         return "\(hours) ч \(mins) мин"
     }
 

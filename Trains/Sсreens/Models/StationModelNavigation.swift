@@ -25,7 +25,8 @@ struct StationData: Identifiable, Equatable {
     let leftBottomText: String
     let middleBottomText: String
     let rightBottomText: String
-
+    let departureDate: Date?
+    let hasTransfers: Bool
 }
 
 struct Station: Identifiable, Hashable {

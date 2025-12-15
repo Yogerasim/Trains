@@ -5,6 +5,7 @@ struct StationsScreenView: View {
     var onBack: () -> Void
 
     @StateObject private var vm: StationsScreenViewModel
+    @StateObject private var filterVM = FilterViewModel()
 
     @State private var path = NavigationPath()
     @State private var hasActiveFilters = false
@@ -25,11 +26,22 @@ struct StationsScreenView: View {
             NavigationStack(path: $path) {
                 content
                     .navigationDestination(for: FilterNav.self) { _ in
-                        FilterScreenViewWrapper(
-                            path: $path,
-                            hasActiveFilters: $hasActiveFilters,
-                            filteredStations: $filteredStations,
-                            allStations: vm.stations
+                        FilterScreenView(
+                            timeOptions: [
+                                "Утро 06:00 - 12:00",
+                                "День 12:00 - 18:00",
+                                "Вечер 18:00 - 00:00",
+                            ],
+                            timeSelections: $filterVM.timeSelections,
+                            showTransfers: $filterVM.showTransfers,
+                            onBack: {
+                                path.removeLast()
+                            },
+                            onApply: {
+                                filteredStations = filterVM.apply(to: vm.stations)
+                                hasActiveFilters = filterVM.hasActiveFilters
+                                path.removeLast()
+                            }
                         )
                     }
                     .navigationDestination(for: InfoNav.self) { nav in
@@ -53,8 +65,8 @@ struct StationsScreenView: View {
                     await vm.load()
                 }
             }
-            .onChange(of: vm.stations) { newValue in
-                filteredStations = newValue
+            .onChange(of: vm.stations) { _, newStations in
+                filteredStations = filterVM.apply(to: newStations)
             }
 
             if vm.showNoInternet {

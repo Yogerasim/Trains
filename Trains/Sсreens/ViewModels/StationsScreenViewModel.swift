@@ -57,6 +57,13 @@ final class StationsScreenViewModel: ObservableObject {
                 let arrivalTime = formatDateAny(segment.arrival)
                 let durationText = formatAnyDuration(segment.duration)
 
+                // If departure date is required for StationData, skip this segment if missing
+                guard let departureDate = segment.departure else {
+                    continue
+                }
+
+                let hasTransfers = segment.thread?.uid?.contains("_") == true
+
                 let todayDateText = formatTodayDate(Date())
 
                 let stationTitle =
@@ -78,13 +85,14 @@ final class StationsScreenViewModel: ObservableObject {
                     StationData(
                         carrierCode: carrier?.code.map { String($0) },
                         logoURL: logoURL,
-                         // fallback asset
                         stationName: stationTitle,
                         subtitle: subtitleText,
                         rightTopText: todayDateText,
                         leftBottomText: departureTime,
                         middleBottomText: durationText,
-                        rightBottomText: arrivalTime
+                        rightBottomText: arrivalTime,
+                        departureDate: departureDate,
+                        hasTransfers: hasTransfers
                     )
                 )
             }
