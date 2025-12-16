@@ -78,7 +78,7 @@ struct StationView: View {
         .clipShape(RoundedRectangle(cornerRadius: 16))
     }
 
-    
+    // MARK: - Logo
 
     private var logoImage: some View {
         AsyncImage(url: logoURL) { phase in
@@ -107,7 +107,7 @@ struct StationView: View {
 #Preview {
     VStack(spacing: 20) {
         StationView(
-            logoURL: URL(string: "https:
+            logoURL: URL(string: "https://yastat.net/s3/rasp/media/data/company/logo/logo.gif"),
             stationName: "РЖД / ФПК",
             subtitle: "С пересадкой в Костроме",
             rightTopText: "14 декабря",

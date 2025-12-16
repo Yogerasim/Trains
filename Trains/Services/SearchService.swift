@@ -5,7 +5,6 @@ import OpenAPIURLSession
 typealias Segments = Components.Schemas.Segments
 
 protocol SearchServiceProtocol {
-
     func getScheduleBetweenStations(from: String, to: String, date: String?) async throws -> Segments
 }
 
@@ -25,7 +24,7 @@ final class SearchService: SearchServiceProtocol {
         date: String?
     ) async throws -> Segments {
 
-        var components = URLComponents(string: "https:
+        var components = URLComponents(string: "https://api.rasp.yandex.net/v3.0/search/")!
         components.queryItems = [
             .init(name: "apikey", value: apikey),
             .init(name: "from", value: from),
