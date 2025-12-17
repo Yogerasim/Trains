@@ -8,7 +8,7 @@ protocol CarrierServiceProtocol {
     func getCarrierInfo(code: String) async throws -> Carrier
 }
 
-final class CarrierService: CarrierServiceProtocol {
+actor CarrierService: CarrierServiceProtocol {
     private let client: Client
     private let apikey: String
 
@@ -22,6 +22,6 @@ final class CarrierService: CarrierServiceProtocol {
             apikey: apikey,
             code: code
         ))
-        return try response.ok.body.json
+        return try await response.ok.body.json
     }
 }

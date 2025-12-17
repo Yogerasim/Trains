@@ -8,7 +8,7 @@ protocol ScheduleServiceProtocol {
     func getStationSchedule(station: String, date: String?) async throws -> ScheduleResponse
 }
 
-final class ScheduleService: ScheduleServiceProtocol {
+actor ScheduleService: ScheduleServiceProtocol {
     private let client: Client
     private let apikey: String
 

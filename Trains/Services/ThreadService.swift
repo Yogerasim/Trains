@@ -8,7 +8,7 @@ protocol ThreadServiceProtocol {
     func getRouteStations(uid: String, date: String?) async throws -> Thread
 }
 
-final class ThreadService: ThreadServiceProtocol {
+actor ThreadService: ThreadServiceProtocol {
     private let client: Client
     private let apikey: String
 
@@ -23,7 +23,7 @@ final class ThreadService: ThreadServiceProtocol {
             uid: uid,
             date: date
         ))
-        return try response.ok.body.json
+        return try await response.ok.body.json
     }
 }
 
@@ -33,14 +33,17 @@ extension ThreadService {
         do {
             let schedule = try await getRouteStations(uid: uid, date: date)
 
-            let encoder = JSONEncoder()
-            encoder.outputFormatting = .prettyPrinted
-            if let jsonData = try? encoder.encode(schedule),
-               let jsonString = String(data: jsonData, encoding: .utf8)
-            {
-                print("Successfully fetched thread:\n\(jsonString)")
-            } else {
-                print("Successfully fetched thread (debug description): \(schedule)")
+            // Hop to the main actor only for using the @MainActor-isolated Encodable conformance.
+            await MainActor.run {
+                let encoder = JSONEncoder()
+                encoder.outputFormatting = .prettyPrinted
+                if let jsonData = try? encoder.encode(schedule),
+                   let jsonString = String(data: jsonData, encoding: .utf8)
+                {
+                    print("Successfully fetched thread:\n\(jsonString)")
+                } else {
+                    print("Successfully fetched thread (debug description): \(schedule)")
+                }
             }
 
             if let arrival = schedule.stops?.first?.arrival {

@@ -8,7 +8,7 @@ protocol SearchServiceProtocol {
     func getScheduleBetweenStations(from: String, to: String, date: String?) async throws -> Segments
 }
 
-final class SearchService: SearchServiceProtocol {
+actor SearchService: SearchServiceProtocol {
 
     private let apikey: String
     private let client: Client

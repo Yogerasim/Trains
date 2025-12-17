@@ -35,8 +35,8 @@ private func extractYandexCode(from codes: Any) -> String? {
     return nil
 }
 
-final class RussianCitiesService {
-    func getRussianCities(from allStations: AllStations) -> [City] {
+actor RussianCitiesService {
+    nonisolated func getRussianCities(from allStations: AllStations) -> [City] {
         guard let countries = allStations.countries else { return [] }
         guard let russia = countries.first(where: { $0.title == "Россия" }) else { return [] }
         guard let regions = russia.regions else { return [] }
