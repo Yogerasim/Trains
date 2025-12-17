@@ -11,7 +11,7 @@ struct SelectionListView: View {
     @State private var searchText = ""
 
     var body: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: .zero) {
             NavigationTitleView(title: title) {
                 dismiss()
             }

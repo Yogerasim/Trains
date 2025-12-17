@@ -9,18 +9,15 @@ struct ChoosingDirectionView: View {
         stories: Story.all
     )
 
-    @State private var showStories = false
-    @State private var selectedIndex = 0
-
     var body: some View {
         VStack(spacing: 16) {
             StoryCardsScrollView(viewModel: storyVM)
                 .padding(.top, 16)
-                .onReceive(storyVM.$currentStoryID.compactMap { $0 }) { id in
-                    if let index = storyVM.stories.firstIndex(where: { $0.id == id }) {
-                        selectedIndex = index
-                        showStories = true
-                    }
+                .onReceive(storyVM.$currentStoryID) { id in
+                    model.handleStorySelection(
+                        storyID: id,
+                        stories: storyVM.stories
+                    )
                 }
 
             Spacer().frame(height: 12)
@@ -57,17 +54,17 @@ struct ChoosingDirectionView: View {
             }
         }
 
-        .fullScreenCover(isPresented: $showStories) {
+        .fullScreenCover(isPresented: $model.showStories) {
             StoriesView(
                 stories: storyVM.stories,
-                startIndex: $selectedIndex,
+                startIndex: $model.selectedStoryIndex,
                 onViewed: { id in
                     storyVM.selectStory(
                         at: storyVM.stories.firstIndex { $0.id == id } ?? 0
                     )
                 },
                 onClose: {
-                    showStories = false
+                    model.showStories = false
                 }
             )
         }
@@ -103,7 +100,7 @@ struct ChoosingDirectionView: View {
                 .fill(DesignSystem.Colors.blueUniversal)
 
             HStack {
-                VStack(spacing: 0) {
+                VStack(spacing: .zero) {
                     Button(action: { model.openCityFrom() }) {
                         DirectionOptionButton(title: model.fromTitle)
                     }

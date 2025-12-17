@@ -72,10 +72,8 @@ struct StationsScreenView: View {
                     }
                     .navigationBarBackButtonHidden(true)
             }
-            .onAppear {
-                Task {
-                    await vm.load()
-                }
+            .task {
+                await vm.load()
             }
             .onChange(of: vm.stations) { _, newStations in
                 filteredStations = filterVM.apply(to: newStations)

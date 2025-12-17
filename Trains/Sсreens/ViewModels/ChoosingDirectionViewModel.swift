@@ -10,6 +10,8 @@ final class ChoosingDirectionViewModel: ObservableObject {
 
     @Published var screenState: ScreenState = .content
     @Published var navigation: ChoosingDirectionNavigation?
+    @Published var showStories: Bool = false
+    @Published var selectedStoryIndex: Int = 0
 
     var fromTitle: String {
         if let c = fromCity, let s = fromStation {
@@ -50,5 +52,17 @@ final class ChoosingDirectionViewModel: ObservableObject {
     func swapDirections() {
         swap(&fromCity, &toCity)
         swap(&fromStation, &toStation)
+    }
+    func handleStorySelection(
+        storyID: Story.ID?,
+        stories: [Story]
+    ) {
+        guard
+            let id = storyID,
+            let index = stories.firstIndex(where: { $0.id == id })
+        else { return }
+
+        selectedStoryIndex = index
+        showStories = true
     }
 }

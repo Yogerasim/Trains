@@ -20,7 +20,7 @@ struct UserAgreementView: View {
     """
 
     var body: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: .zero) {
             NavigationTitleView(title: "Пользовательское соглашение") {
                 onClose?()
             }

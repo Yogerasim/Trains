@@ -11,7 +11,7 @@ struct StationView: View {
     let rightBottomText: String
 
     var body: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: .zero) {
             HStack(spacing: 8) {
 
                 logoImage

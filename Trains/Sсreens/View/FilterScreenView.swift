@@ -11,7 +11,7 @@ struct FilterScreenView: View {
     @State private var showServerError = false
 
     var body: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: .zero) {
             contentView
 
             Spacer()
