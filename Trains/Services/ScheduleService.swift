@@ -23,6 +23,6 @@ actor ScheduleService: ScheduleServiceProtocol {
             station: station,
             date: date
         ))
-        return try response.ok.body.json
+        return try await response.ok.body.json
     }
 }

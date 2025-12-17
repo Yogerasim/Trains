@@ -11,12 +11,20 @@ struct StationsScreenView: View {
     @State private var hasActiveFilters = false
     @State private var filteredStations: [StationData] = []
 
-    init(fromStationCode: String, toStationCode: String, headerText: String, onBack: @escaping () -> Void, searchService: SearchService) {
-        _vm = StateObject(wrappedValue: StationsScreenViewModel(
-            fromStationCode: fromStationCode,
-            toStationCode: toStationCode,
-            searchService: searchService
-        ))
+    init(
+        fromStationCode: String,
+        toStationCode: String,
+        headerText: String,
+        onBack: @escaping () -> Void,
+        searchService: SearchService
+    ) {
+        _vm = StateObject(
+            wrappedValue: StationsScreenViewModel(
+                fromStationCode: fromStationCode,
+                toStationCode: toStationCode,
+                searchService: searchService
+            )
+        )
         self.headerText = headerText
         self.onBack = onBack
     }
@@ -25,38 +33,42 @@ struct StationsScreenView: View {
         ZStack {
             NavigationStack(path: $path) {
                 content
-                    .navigationDestination(for: FilterNav.self) { _ in
-                        FilterScreenView(
-                            timeOptions: [
-                                "Утро 06:00 - 12:00",
-                                "День 12:00 - 18:00",
-                                "Вечер 18:00 - 00:00",
-                            ],
-                            timeSelections: $filterVM.timeSelections,
-                            showTransfers: $filterVM.showTransfers,
-                            onBack: {
-                                path.removeLast()
-                            },
-                            onApply: {
-                                filteredStations = filterVM.apply(to: vm.stations)
-                                hasActiveFilters = filterVM.hasActiveFilters
-                                path.removeLast()
-                            }
-                        )
-                    }
-                    .navigationDestination(for: InfoNav.self) { nav in
-                        InfoScreenView(
-                            viewModel: InfoScreenViewModel(
-                                carrierCode: nav.carrierCode,
-                                carrierService: CarrierService(
-                                    client: APIConfig.client,
-                                    apikey: APIConfig.apiKey
-                                )
-                            ),
-                            onBack: {
-                                path.removeLast()
-                            }
-                        )
+                    .navigationDestination(for: StationsRoute.self) { route in
+                        switch route {
+
+                        case .filter:
+                            FilterScreenView(
+                                timeOptions: [
+                                    "Утро 06:00 - 12:00",
+                                    "День 12:00 - 18:00",
+                                    "Вечер 18:00 - 00:00",
+                                ],
+                                timeSelections: $filterVM.timeSelections,
+                                showTransfers: $filterVM.showTransfers,
+                                onBack: {
+                                    path.removeLast()
+                                },
+                                onApply: {
+                                    filteredStations = filterVM.apply(to: vm.stations)
+                                    hasActiveFilters = filterVM.hasActiveFilters
+                                    path.removeLast()
+                                }
+                            )
+
+                        case .info(let carrierCode):
+                            InfoScreenView(
+                                viewModel: InfoScreenViewModel(
+                                    carrierCode: carrierCode,
+                                    carrierService: CarrierService(
+                                        client: APIConfig.client,
+                                        apikey: APIConfig.apiKey
+                                    )
+                                ),
+                                onBack: {
+                                    path.removeLast()
+                                }
+                            )
+                        }
                     }
                     .navigationBarBackButtonHidden(true)
             }
@@ -81,7 +93,9 @@ struct StationsScreenView: View {
 
     private var content: some View {
         VStack(spacing: 30) {
-            NavigationTitleView(title: "") { onBack() }
+            NavigationTitleView(title: "") {
+                onBack()
+            }
 
             Text(headerText)
                 .font(DesignSystem.Fonts.bold24)
@@ -93,10 +107,12 @@ struct StationsScreenView: View {
                 ProgressView()
                     .frame(maxWidth: .infinity)
                 Spacer()
+
             } else if filteredStations.isEmpty {
                 PlaceholderView(type: .emptyMessage)
                     .frame(maxWidth: .infinity)
                 Spacer()
+
             } else {
                 ScrollView {
                     VStack(spacing: 16) {
@@ -112,12 +128,11 @@ struct StationsScreenView: View {
                             )
                             .onTapGesture {
                                 if let code = station.carrierCode {
-                                    path.append(InfoNav(
-                                        carrierName: station.stationName,
-                                        imageName: "",
-                                        info: [],
-                                        carrierCode: code
-                                    ))
+                                    path.append(
+                                        StationsRoute.info(
+                                            carrierCode: code
+                                        )
+                                    )
                                 }
                             }
                         }
@@ -128,8 +143,11 @@ struct StationsScreenView: View {
                 .frame(maxHeight: .infinity)
             }
 
-            PrimaryButton(title: "Уточнить время", showBadge: hasActiveFilters) {
-                path.append(FilterNav())
+            PrimaryButton(
+                title: "Уточнить время",
+                showBadge: hasActiveFilters
+            ) {
+                path.append(StationsRoute.filter)
             }
             .padding(.bottom, 16)
         }

@@ -34,6 +34,6 @@ actor SearchService: SearchServiceProtocol {
 
         let (data, _) = try await URLSession.shared.data(from: components.url!)
 
-        return try YandexJSONDecoder.shared.decode(Segments.self, from: data)
+        return try await YandexJSONDecoder.shared.decode(Segments.self, from: data)
     }
 }

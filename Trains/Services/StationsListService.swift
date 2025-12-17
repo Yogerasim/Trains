@@ -35,7 +35,9 @@ actor StationsListService: StationsListServiceProtocol {
         }
 
         let decoder = JSONDecoder()
-        return try decoder.decode(AllStations.self, from: data)
+        return try await MainActor.run {
+            try decoder.decode(AllStations.self, from: data)
+        }
     }
 }
 

@@ -23,6 +23,6 @@ actor NearestSettlementService: NearestSettlementServiceProtocol {
             lng: lng,
             distance: distance
         ))
-        return try response.ok.body.json
+        return try await response.ok.body.json
     }
 }
